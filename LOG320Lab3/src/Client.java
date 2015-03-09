@@ -5,10 +5,10 @@ class Client
 {
 	public static void main(String[] args)
 	{
+		Board gameBoard = new Board();
 		Socket MyClient;
 		BufferedInputStream input;
 		BufferedOutputStream output;
-		int[][] board = new int[8][8];
 		try
 		{
 			MyClient = new Socket("localhost", 8888);
@@ -35,7 +35,7 @@ class Client
 					int x = 0, y = 0;
 					for (int i = 0; i < boardValues.length; i++)
 					{
-						board[x][y] = Integer.parseInt(boardValues[i]);
+						gameBoard.setBoardValue(x, y, Integer.parseInt(boardValues[i]));
 						x++;
 						if (x == 8)
 						{
@@ -45,6 +45,7 @@ class Client
 					}
 
 					System.out.println("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
+					gameBoard.displayBoard();
 					String move = null;
 					move = console.readLine();
 					output.write(move.getBytes(), 0, move.length());
@@ -65,7 +66,7 @@ class Client
 					int x = 0, y = 0;
 					for (int i = 0; i < boardValues.length; i++)
 					{
-						board[x][y] = Integer.parseInt(boardValues[i]);
+						gameBoard.setBoardValue(x, y, Integer.parseInt(boardValues[i]));
 						x++;
 						if (x == 8)
 						{
@@ -110,6 +111,7 @@ class Client
 		{
 			System.out.println(e);
 		}
-
+		
 	}
+	
 }
