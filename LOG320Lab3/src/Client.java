@@ -44,8 +44,9 @@ class Client
 						}
 					}
 
-					System.out.println("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
 					gameBoard.displayBoard();
+					
+					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
 					String move = null;
 					move = console.readLine();
 					output.write(move.getBytes(), 0, move.length());
@@ -54,7 +55,7 @@ class Client
 				// Début de la partie en joueur Noir
 				if (cmd == '2')
 				{
-					System.out.println("Nouvelle partie! Vous jouer noir, attendez le coup des blancs");
+					System.out.print("Nouvelle partie! Vous jouer noir, attendez le coup des blancs");
 					byte[] aBuffer = new byte[1024];
 
 					int size = input.available();
@@ -85,10 +86,9 @@ class Client
 					int size = input.available();
 					// System.out.println("size " + size);
 					input.read(aBuffer, 0, size);
-
 					String s = new String(aBuffer);
-					System.out.println("Dernier coup : " + s);
-					System.out.println("Entrez votre coup : ");
+					System.out.print("Dernier coup : " + s);
+					System.out.print("Entrez votre coup : ");
 					String move = null;
 					move = console.readLine();
 					output.write(move.getBytes(), 0, move.length());
@@ -98,8 +98,7 @@ class Client
 				// Le dernier coup est invalide
 				if (cmd == '4')
 				{
-					System.out
-							.println("Coup invalide, entrez un nouveau coup : ");
+					System.out.print("Coup invalide, entrez un nouveau coup : ");
 					String move = null;
 					move = console.readLine();
 					output.write(move.getBytes(), 0, move.length());

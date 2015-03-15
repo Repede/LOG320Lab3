@@ -8,7 +8,7 @@ public class Board
 		StringBuilder boardDisplay = new StringBuilder("");
 		for(int i = 0 ; i < 8 ; ++i)
 		{
-			boardDisplay.append(i+1+" ");
+			boardDisplay.append((8-i)+" ");
 			for(int j = 0 ; j < 8 ; ++j)
 			{
 				if(board[i][j] == 0)
@@ -26,7 +26,7 @@ public class Board
 			}
 			boardDisplay.append("\n");
 		}
-		boardDisplay.append("  ABCDEFGH");
+		boardDisplay.append("  ABCDEFGH\n");
 		System.out.println(boardDisplay.toString());
 	}
 	
