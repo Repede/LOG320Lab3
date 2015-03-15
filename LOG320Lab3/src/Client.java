@@ -8,7 +8,7 @@ class Client
 		Board gameBoard = new Board();
 		Socket MyClient;
 		BufferedInputStream input;
-		BufferedOutputStream output;
+		BufferedOutputStream output;;
 		try
 		{
 			MyClient = new Socket("localhost", 8888);
@@ -49,6 +49,9 @@ class Client
 					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
 					String move = null;
 					move = console.readLine();
+					gameBoard.updateBoard(gameBoard, move);
+					System.out.print("\n");
+					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
 					output.flush();
 				}
@@ -87,10 +90,16 @@ class Client
 					// System.out.println("size " + size);
 					input.read(aBuffer, 0, size);
 					String s = new String(aBuffer);
+					gameBoard.updateBoard(gameBoard, s);
+					System.out.print("\n");
+					gameBoard.displayBoard();
 					System.out.print("Dernier coup : " + s);
-					System.out.print("Entrez votre coup : ");
+					System.out.print("\nEntrez votre coup : ");
 					String move = null;
 					move = console.readLine();
+					gameBoard.updateBoard(gameBoard, move);
+					System.out.print("\n");
+					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
 					output.flush();
 
@@ -101,6 +110,8 @@ class Client
 					System.out.print("Coup invalide, entrez un nouveau coup : ");
 					String move = null;
 					move = console.readLine();
+					System.out.print("\n");
+					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
 					output.flush();
 
