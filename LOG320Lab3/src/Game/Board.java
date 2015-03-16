@@ -60,6 +60,56 @@ public class Board
 		return gameBoard;
 	}
 	
+	private char intToLetter(int num)
+	{
+		char x = '0';
+		switch(num) 
+		{
+		case 0: 
+			x = 'A';
+	    	break;
+		case 1:
+			x = 'B';
+	     	break;
+		case 2:
+			x = 'C';
+	     	break;
+		case 3:
+			x = 'D';
+	     	break;
+		case 4:
+			x = 'E';
+	     	break;
+		case 5:
+			x = 'F';
+	     	break;
+		case 6:
+			x = 'G';
+	     	break;
+		case 7:
+			x = 'H';
+	     	break;
+		default: 
+			System.out.println("Problème d affichage du tableau.");
+	  		break;
+		}
+		return x;
+	}
+	
+	public String boardIndexToLetter(String boardCode)
+	{
+		String code = "";
+		int firstNum = Integer.valueOf(String.valueOf(boardCode.charAt(1)));
+		int secondNum = Integer.valueOf(String.valueOf(boardCode.charAt(0)));
+		int thirdNum = Integer.valueOf(String.valueOf(boardCode.charAt(3)));
+		int fourthNum = Integer.valueOf(String.valueOf(boardCode.charAt(2)));
+		code += intToLetter(firstNum);
+		code += String.valueOf(8-secondNum);
+		code += intToLetter(thirdNum);
+		code += String.valueOf(8-fourthNum);
+		return code;
+	}
+	
 	public int[] letterToBoardIndex(String movementToUpdate)
 	{
 		char letter = movementToUpdate.charAt(0);

@@ -10,6 +10,7 @@ class Client
 		GameRules gameRules = new GameRules();
 		Evaluator evaluator = new Evaluator();
 		Board gameBoard = new Board();
+		Board previousValidBoard = new Board();
 		Socket MyClient;
 		BufferedInputStream input;
 		BufferedOutputStream output;
@@ -51,11 +52,11 @@ class Client
 					}
 
 					gameBoard.displayBoard();
-					
+					previousValidBoard = gameBoard;
 					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");				
 					
 					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					String move = evaluator.RetrieveBestMove(validPositions);
+					String move = gameBoard.boardIndexToLetter(evaluator.RetrieveBestMove(validPositions));
 					System.out.println(move);
 					
 					gameBoard.updateBoard(gameBoard, move);
@@ -88,6 +89,7 @@ class Client
 							y++;
 						}
 					}
+					previousValidBoard = gameBoard;
 				}
 
 				// Le serveur demande le prochain coup
@@ -103,11 +105,12 @@ class Client
 					gameBoard.updateBoard(gameBoard, s);
 					System.out.print("\n");
 					gameBoard.displayBoard();
+					previousValidBoard = gameBoard;
 					System.out.print("Dernier coup : " + s);
 					System.out.print("\nEntrez votre coup : ");
 					
 					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					String move = evaluator.RetrieveBestMove(validPositions);
+					String move = gameBoard.boardIndexToLetter(evaluator.RetrieveBestMove(validPositions));
 					System.out.println(move);
 					
 					gameBoard.updateBoard(gameBoard, move);
@@ -120,10 +123,12 @@ class Client
 				// Le dernier coup est invalide
 				if (cmd == '4')
 				{
+					gameBoard = previousValidBoard;
 					System.out.print("Coup invalide, entrez un nouveau coup : ");
 
 					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					String move = evaluator.RetrieveBestMove(validPositions);
+					String move = gameBoard.boardIndexToLetter(evaluator.RetrieveBestMove(validPositions));
+
 					System.out.println("Move: " + move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
