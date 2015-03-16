@@ -135,7 +135,7 @@ public class GameRulesTest extends TestCase
 				{0,0,0,0,0,0,0,0}
 		};
 		
-		assertTrue(gr.validateMouvementInRow(0,0, 2, board, false) == true);
+		assertTrue(gr.validateMouvementInRow(0, 0, 2, board, false) == true);
 		assertTrue(gr.validateMouvementInRow(1, 0, 2, board, false) == false);
 		assertTrue(gr.validateMouvementInRow(2, 0, 2, board, false) == false);
 		assertTrue(gr.validateMouvementInRow(3, 7, 2, board, false) == false);

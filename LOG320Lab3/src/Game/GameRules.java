@@ -38,7 +38,7 @@ public class GameRules
 	public int calculatePawnsInDiagonal(int[][] board,int currentX,int currentY)
 	{
 		int pawnCounter=0;
-		//looking upper position from original position. Parcours de bas vers le haut, gauche � droite
+		//looking upper position from original position. Parcours de bas vers le haut, gauche � droite
 		while(currentX<7 && currentY>0)
 		{
 			currentX++;
@@ -89,34 +89,44 @@ public class GameRules
 		int thePawn =  board[i][j];
 		int initialPosition = j;
 		
+		// On se déplace vers la gauche dans la ligne
 		if(toLeft){
-			while(j < initialPosition+nbrPawnsInRow && j != -1){
+			// On regarde si le déplacement sort du board
+			if(initialPosition-nbrPawnsInRow < 0)
+				return false;
+						
+			// On regarde la ligne d'action s'il y a un pion de l'autre couleur
+			while(j > initialPosition-nbrPawnsInRow){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				j--;
 			}
 			
-			if(initialPosition-nbrPawnsInRow<=-1)
-				isValid = false;
-			else if(board[i][initialPosition-nbrPawnsInRow] == thePawn){
-				isValid = false;
+			// On regarde si au bout de notre déplacement il y a un pion allié
+			if(board[i][initialPosition-nbrPawnsInRow] == thePawn){
+				return false;
 			}
 		}
+		// On se déplace vers la droite dans la ligne
 		else{
-			while(j < initialPosition+nbrPawnsInRow && j != 8){
+			// On regarde si le déplacement sort du board
+			if(initialPosition+nbrPawnsInRow > 7)
+				return false;
+						
+			// On regarde dans la ligne d'action s'il y a un pion de l'autre couleur
+			while(j < initialPosition+nbrPawnsInRow){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				j++;
 			}
 			
-			if(initialPosition+nbrPawnsInRow>7)
-				isValid = false;
-			else if(board[i][initialPosition+nbrPawnsInRow] == thePawn){
-				isValid = false;
+			// On regarde si au bout de notre déplacement il y a un pion allié
+			if(board[i][initialPosition+nbrPawnsInRow] == thePawn){
+				return false;
 			}
 		}
 		
@@ -127,35 +137,44 @@ public class GameRules
 		int  thePawn =  board[i][j];
 		int initialPosition = i;
 		
+		// On se déplace vers le bas dans la colonne
 		if(toDown){
-			while(i < initialPosition+nbrPawnsInColumn && i != 8){
+			// On regarde si le déplacement sort du board
+			if(initialPosition+nbrPawnsInColumn > 7)
+				return false;
+						
+			// On regarde la ligne d'action s'il y a un pion de l'autre couleur
+			while(i < initialPosition+nbrPawnsInColumn){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				i++;
 			}
 			
-			if(initialPosition+nbrPawnsInColumn > 7)
-				isValid = false;
-			else if(board[initialPosition+nbrPawnsInColumn][j] == thePawn){
-				isValid = false;
+			// On regarde si au bout de notre déplacement il y a un pion allié
+			if(board[initialPosition+nbrPawnsInColumn][j] == thePawn){
+				return false;
 			}
 		}
+		// On se déplace vers le haut dans la colonne
 		else{
-			
-			while(i > initialPosition-nbrPawnsInColumn && i != -1){
+			// On regarde si le déplacement sort du board
+			if(initialPosition-nbrPawnsInColumn < 0)
+				return false;
+						
+			// On regarde la ligne d'action s'il y a un pion de l'autre couleur
+			while(i > initialPosition-nbrPawnsInColumn){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				i--;
 			}
 			
-			if(initialPosition-nbrPawnsInColumn<0)
-				isValid = false;
-			else if(board[initialPosition-nbrPawnsInColumn][j] == thePawn){
-				isValid = false;
+			// On regarde si au bout de notre déplacement il y a un pion allié
+			if(board[initialPosition-nbrPawnsInColumn][j] == thePawn){
+				return false;
 			}
 		}
 							
@@ -168,10 +187,17 @@ public class GameRules
 		int initialPositionI = i;
 		int initialPositionJ = j;
 		
+		// On se déplace du bas vers le haut dans la diagonale (de gauche à droite)
 		if(downToUp){
-			while(i > initialPositionI-nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal && i != -1 && j != 8){
+			// On regarde si le déplacement sort du board
+			if(initialPositionI-nbrPawnsInDiagonal < 0 || initialPositionJ+nbrPawnsInDiagonal > 7){
+				return false;
+			}
+						
+			// On regarde la ligne d'action s'il y a un pion de l'autre couleur
+			while(i > initialPositionI-nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				j++;
@@ -179,29 +205,32 @@ public class GameRules
 				
 			}
 			
-			if(initialPositionI-nbrPawnsInDiagonal<0 || initialPositionJ+nbrPawnsInDiagonal>7){
-				isValid = false;
-			}
-			else if( board[initialPositionI-nbrPawnsInDiagonal][initialPositionJ+nbrPawnsInDiagonal] == thePawn){
-				isValid = false;
+			// On regarde si au bout du déplacement il y a un pion allié
+			if(board[initialPositionI-nbrPawnsInDiagonal][initialPositionJ+nbrPawnsInDiagonal] == thePawn){
+				return false;
 			}
 			
 		}
+		// On de déplace du haut vers le bas dans la diagonale (de gauche à droite)
 		else{
-			while(i < initialPositionI+nbrPawnsInDiagonal && j > initialPositionJ-nbrPawnsInDiagonal && i != 8 && j != 8){
+			// On regarde si le déplacement sort du board
+			if(initialPositionI+nbrPawnsInDiagonal > 7 || initialPositionJ-nbrPawnsInDiagonal < 0){
+				return false;
+			}
+						
+			// On regarde dans la ligne d'action s'il y a un pion de l'autre couleur
+			while(i < initialPositionI+nbrPawnsInDiagonal && j > initialPositionJ-nbrPawnsInDiagonal){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				j--;
 				i++;
 			}
 			
-			if(initialPositionI+nbrPawnsInDiagonal>7 || initialPositionJ-nbrPawnsInDiagonal<0){
-				isValid = false;
-			}
-			else if( board[initialPositionI+nbrPawnsInDiagonal][initialPositionJ-nbrPawnsInDiagonal] == thePawn){
-				isValid = false;
+			// On regarde si au bout du déplacement il y a un pion allié
+			if(board[initialPositionI+nbrPawnsInDiagonal][initialPositionJ-nbrPawnsInDiagonal] == thePawn){
+				return false;
 			}
 		}
 		
@@ -214,38 +243,48 @@ public class GameRules
 		int initialPositionI = i;
 		int initialPositionJ = j;
 		
+		// On de déplace du bas vers le haut dans la diagonale inverse (de droite à gauche)
 		if(downToUp){
-			while(i > initialPositionI-nbrPawnsInDiagonal && j > initialPositionJ-nbrPawnsInDiagonal && i != -1 && j != -1){
+			// On regarde si le déplacement sort du board
+			if(initialPositionI-nbrPawnsInDiagonal < 0 || initialPositionJ-nbrPawnsInDiagonal < 0){
+				return false;
+			}
+			
+			// On regarde si dans la ligne d'action il y a un pion de l'autre couleur
+			while(i > initialPositionI-nbrPawnsInDiagonal && j > initialPositionJ-nbrPawnsInDiagonal){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				j--;
 				i--;
 			}
 			
-			if(initialPositionI-nbrPawnsInDiagonal<0 || initialPositionJ-nbrPawnsInDiagonal<0){
-				isValid = false;
-			}
-			else if( board[initialPositionI-nbrPawnsInDiagonal][initialPositionJ-nbrPawnsInDiagonal] == thePawn){
-				isValid = false;
+			// On regarde si au bout du déplacement il y a un pion allié
+			if(board[initialPositionI-nbrPawnsInDiagonal][initialPositionJ-nbrPawnsInDiagonal] == thePawn){
+				return false;
 			}
 		}
+		// On se déplace de haut en bas dans la diagonale inverse (droite à gauche)
 		else{
-			while(i < initialPositionI+nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal && i != 8 && j != 8){
+			// On regarde si le déplacement sort du board
+			if(initialPositionI+nbrPawnsInDiagonal > 7 || initialPositionJ+nbrPawnsInDiagonal > 7){
+				return false;
+			}
+			
+			// On regarde si dans la ligne d'action il y a un pion de l'autre couleur
+			while(i < initialPositionI+nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal){
 				if(board[i][j] != thePawn && board[i][j] != 0){
-					isValid = false;
+					return false;
 				}
 				
 				j++;
 				i++;
 			}
 			
-			if(initialPositionI+nbrPawnsInDiagonal>7 || initialPositionJ+nbrPawnsInDiagonal>7){
-				isValid = false;
-			}
-			else if( board[initialPositionI+nbrPawnsInDiagonal][initialPositionJ+nbrPawnsInDiagonal] == thePawn){
-				isValid = false;
+			// On regarde si au bout du déplacement il y a un pion allié
+			if( board[initialPositionI+nbrPawnsInDiagonal][initialPositionJ+nbrPawnsInDiagonal] == thePawn){
+				return false;
 			}
 		}
 		
