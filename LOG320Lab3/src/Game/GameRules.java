@@ -80,9 +80,31 @@ public class GameRules
 	{
 		return board[xPosition][yPosition]==GameRules.WHITE_PAWN;
 	}
-	//public void isNextMoveValid(int[][] board,)
-	//private boolean isPossibleToMove(board)
-
+	
+	public boolean mouvementLigneEstValid(int position, int nbrPawnsInLine){
+		boolean isValid = false;
+		
+		// Mouvement ligne vers la droite.
+		if(position+nbrPawnsInLine<=7)
+			//Mouvement ligne vers la gauche.
+			if(position-nbrPawnsInLine>=0)
+				isValid = true;
+		
+		return isValid;
+	}
+	
+	public boolean mouvementColumnEstValid(int position, int nbrPawnsInColumn){
+		boolean isValid = false;
+		
+		// Mouvement de la column vers le bas.
+		if(position+nbrPawnsInColumn<=7)
+			// Mouvement de la column vers le haut.
+			if(position+nbrPawnsInColumn>=0)
+				isValid = true;
+		
+		return isValid;
+	}
+	
 	public List<String> generateMoves(int[][] board, int myColor)
 	{
 		List<String> validPositions = new ArrayList<String>();
@@ -90,59 +112,51 @@ public class GameRules
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 			{
-				//si c'est un pion on rentre
+				// Si c'est un pion on rentre
 				if(!this.isCaseEmpty(board, i, j))
-				{
-					//on verifie le nombre de cases que la piece peut avancer
+				{					
+					// On calcul le nombre de piece par direction
 					int nbrPawnsInLine= this.canMoveInline(board, i);
 					int nbrPawnsInColumn=this.canMoveInColumn(board, j);
 					int nbrPawnsInDiagonal=this.canMoveDiagonal(board, i, j);
 					int nbrPawnsInInverserDiagonal=this.canMoveInverserDiagonal(board, i, j);
-					//on verifie si le mouvement est dans l'intervalle permi, 
-					//si la case n'est pas ocupper par un pion 
-					//si le existe un autre pion adversaire dans le chemin
 					
-					//Mouvement inline droite
-					if(i-nbrPawnsInLine>0)
-					{
+					// #TODO: On verifie si le mouvement est dans l'intervalle permi 
+					
+					if(mouvementLigneEstValid(j, nbrPawnsInLine)){
+						// #TODO: mettre le coup valide à jouer sous forme ex: D6D5
 						
+						//String letter = RetrieveLetterFromNumber(j);
 					}
-					//Mouvement inline gauche
-					if(i+nbrPawnsInLine<8)
-					{
-						
+					if(mouvementColumnEstValid(i, nbrPawnsInColumn)){
+						// #TODO: mettre le coup valide à jouer sous forme ex: D6D5
 					}
-					//Mouvement in row top
-					if(j-nbrPawnsInColumn>0)
-					{
+					
+					
 						
-						
-					}
-					//Mouvement in row bottom
-					if(j+nbrPawnsInColumn<8)
-					{
-						
-					}
 					//Mouvement in diagonal top
-					if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
-					{
-						
-					}
+					//if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
+					
 					//Mouvement in diagonal bottom
-					if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
-					{
+					//if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
+					//{
 						
-					}
+					//}
 					//Mouvement in inverserDiagonal top
-					if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
-					{
+					//if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
+					//{
 						
-					}
+					//}
 					//Mouvement in inverserDiagonal bottom
-					if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
-					{
+					//if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
+					//{
 						
-					}
+					//}
+					
+					
+					//#TODO: si la case n'est pas ocupper par un pion 
+					//#TODO: si le existe un autre pion adversaire dans le chemin
+					
 					
 				}
 				
