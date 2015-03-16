@@ -83,27 +83,142 @@ public class GameRules
 		return board[xPosition][yPosition]==GameRules.WHITE_PAWN;
 	}
 	
-	public boolean mouvementLigneEstValid(int position, int nbrPawnsInLine){
-		boolean isValid = false;
+	
+	public boolean validateMouvementInRow(int i, int j, int nbrPawnsInRow, int[][] board, boolean toLeft){
+		boolean isValid = true;
+		int thePawn =  board[i][j];
 		
-		// Mouvement ligne vers la droite.
-		if(position+nbrPawnsInLine<=7)
-			//Mouvement ligne vers la gauche.
-			if(position-nbrPawnsInLine>=0)
-				isValid = true;
+		if(toLeft){
+			while(i < i+nbrPawnsInRow){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
+				}
+				
+				i++;
+			}
+			
+			if(i+nbrPawnsInRow>7)
+				isValid = false;
+		}
+		else{
+			while(i < i-nbrPawnsInRow){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
+				}
+				
+				i--;
+			}
+			
+			if(i-nbrPawnsInRow<0)
+				isValid = false;
+		}
 		
 		return isValid;
 	}
-	public boolean mouvementColumnEstValid(int position, int nbrPawnsInColumn){
-		boolean isValid = false;
+	public boolean validateMouvementInColumn(int i, int j, int nbrPawnsInColumn, int[][] board, boolean toDown){
+		boolean isValid = true;
+		int  thePawn =  board[i][j];
 		
-		// Mouvement de la column vers le bas.
-		if(position+nbrPawnsInColumn<=7)
-			// Mouvement de la column vers le haut.
-			if(position+nbrPawnsInColumn>=0)
-				isValid = true;
+		if(toDown){
+			while(j < j+nbrPawnsInColumn){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
+				}
+				
+				j++;
+			}
+			
+			if(j+nbrPawnsInColumn > 7)
+				isValid = false;
+		}
+		else{
+			
+			while(j < j-nbrPawnsInColumn){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
+				}
+				
+				j--;
+			}
+			
+			if(j-nbrPawnsInColumn<0)
+				isValid = false;
+		}
 		
 		return isValid;
+	}
+	public boolean validateMouvementInDiagonal(int i, int j, int nbrPawnsInDiagonal, int[][] board, boolean downToUp){
+		// Diagonal = leftToRight
+		boolean isValid = true;
+		int thePawn = board[i][j];
+		 
+		if(downToUp){
+			while(i > i-nbrPawnsInDiagonal && j < j+nbrPawnsInDiagonal){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
+				}
+				
+				j++;
+				i--;
+				
+			}
+			
+			if(isValid && i-nbrPawnsInDiagonal<0 && j+nbrPawnsInDiagonal>7){
+				isValid = false;
+			}
+		}
+		else{
+			while(i > i+nbrPawnsInDiagonal && j < j-nbrPawnsInDiagonal){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
+				}
+				
+				j--;
+				i++;
+			}
+			
+			if(isValid && i+nbrPawnsInDiagonal>7 && j-nbrPawnsInDiagonal<0){
+				isValid = false;
+			}
+		}
+		
+		return isValid;
+	}
+	public boolean validateMouvementInReverseDiagonal(int i, int j, int nbrPawnsInDiagonal, int[][] board, boolean downToUp){
+		// Diagonal = right to left
+				boolean isValid = true;
+				int thePawn = board[i][j];
+				 
+				if(downToUp){
+					while(i > i-nbrPawnsInDiagonal && j < j-nbrPawnsInDiagonal){
+						if(board[i][j] != thePawn && board[i][j] != 0){
+							isValid = false;
+						}
+						
+						j--;
+						i--;
+					}
+					
+					if(isValid && i-nbrPawnsInDiagonal<0 && j-nbrPawnsInDiagonal>7){
+						isValid = false;
+					}
+				}
+				else{
+					while(i > i+nbrPawnsInDiagonal && j < j+nbrPawnsInDiagonal){
+						if(board[i][j] != thePawn && board[i][j] != 0){
+							isValid = false;
+						}
+						
+						j++;
+						i++;
+					}
+					
+					if(isValid && i+nbrPawnsInDiagonal>7 && j+nbrPawnsInDiagonal<0){
+						isValid = false;
+					}
+				}
+				
+				return isValid;
 	}
 	
 	public List<String> generateMoves(int[][] board, int myColor)
@@ -120,44 +235,36 @@ public class GameRules
 					int nbrPawnsInLine= this.calculatePawnsInRow(board, i);
 					int nbrPawnsInColumn=this.calculatePawnsInColumn(board, j);
 					int nbrPawnsInDiagonal=this.calculatePawnsInDiagonal(board, i, j);
-					int nbrPawnsInInverserDiagonal=this.calculatePawnsInReverseDiagonal(board, i, j);
+					int nbrPawnsInReverseDiagonal=this.calculatePawnsInReverseDiagonal(board, i, j);
 					
-					// #TODO: On verifie si le mouvement est dans l'intervalle permi 
-					if(mouvementLigneEstValid(j, nbrPawnsInLine)){
-						// #TODO: mettre le coup valide à jouer sous forme ex: D6D5
-						
-						//String letter = RetrieveLetterFromNumber(j);
+					// On verifie si le mouvement est dans l'intervalle permi 
+					if(validateMouvementInRow(i, j, nbrPawnsInLine, board, true)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i) + String.valueOf(j - nbrPawnsInLine ));
 					}
-					if(mouvementColumnEstValid(i, nbrPawnsInColumn)){
-						// #TODO: mettre le coup valide à jouer sous forme ex: D6D5
+					if(validateMouvementInRow(i, j, nbrPawnsInLine, board, false)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i) + String.valueOf(j + nbrPawnsInLine ));
 					}
 					
+					if(validateMouvementInColumn(i, j, nbrPawnsInColumn, board, true)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i - nbrPawnsInColumn ) + String.valueOf(j));
+					}
+					if(validateMouvementInColumn(i, j, nbrPawnsInColumn, board, false)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i + nbrPawnsInColumn ) + String.valueOf(j));
+					}
 					
-						
-					//Mouvement in diagonal top
-					//if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
+					if(validateMouvementInDiagonal(i, j, nbrPawnsInDiagonal, board, true)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i - nbrPawnsInDiagonal ) + String.valueOf(j + nbrPawnsInDiagonal));
+					}
+					if(validateMouvementInDiagonal(i, j, nbrPawnsInDiagonal, board, true)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i + nbrPawnsInDiagonal ) + String.valueOf(j - nbrPawnsInDiagonal));
+					}
 					
-					//Mouvement in diagonal bottom
-					//if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
-					//{
-						
-					//}
-					//Mouvement in inverserDiagonal top
-					//if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
-					//{
-						
-					//}
-					//Mouvement in inverserDiagonal bottom
-					//if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
-					//{
-						
-					//}
-					
-					
-					//#TODO: si la case n'est pas ocupper par un pion 
-					//#TODO: si le existe un autre pion adversaire dans le chemin
-					
-					
+					if(validateMouvementInReverseDiagonal(i, j, nbrPawnsInReverseDiagonal, board, true)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i + nbrPawnsInDiagonal ) + String.valueOf(j + nbrPawnsInDiagonal));
+					}
+					if(validateMouvementInReverseDiagonal(i, j, nbrPawnsInReverseDiagonal, board, true)){
+						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i - nbrPawnsInDiagonal ) + String.valueOf(j - nbrPawnsInDiagonal));
+					}					
 				}
 				
 			}
