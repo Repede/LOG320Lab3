@@ -14,7 +14,8 @@ public class GameRules
 	{
 		RIGHT,LEFT,DIAGONAL,INVERSER_DIAGONAL
 	}
-	public int canMoveInline(int[][] board, int currentLine)
+	
+	public int calculatePawnsInRow(int[][] board, int currentLine)
 	{
 		int pawnCounter=0;
 		for (int i = 0; i < 8; i++)
@@ -24,7 +25,7 @@ public class GameRules
 		}
 		return pawnCounter;
 	}
-	public int canMoveInColumn(int[][] board, int currentRow)
+	public int calculatePawnsInColumn(int[][] board, int currentRow)
 	{
 		int pawnCounter=0;
 		for (int i = 0; i < 8; i++)
@@ -34,7 +35,7 @@ public class GameRules
 		}
 		return pawnCounter;
 	}
-	public int canMoveDiagonal(int[][] board,int currentX,int currentY)
+	public int calculatePawnsInDiagonal(int[][] board,int currentX,int currentY)
 	{
 		int pawnCounter=0;
 		//looking upper position from original position. Parcours de bas vers le haut, gauche à droite
@@ -53,7 +54,7 @@ public class GameRules
 		}
 		return pawnCounter;
 	}
-	public int canMoveInverserDiagonal(int[][] board,int currentX,int currentY)
+	public int calculatePawnsInReverseDiagonal(int[][] board,int currentX,int currentY)
 	{
 		int pawnCounter=0;
 		//looking upper position from original position
@@ -72,6 +73,7 @@ public class GameRules
 		}
 		return pawnCounter;
 	}
+	
 	private boolean isCaseEmpty(int[][] board, int xPosition,int yPosition )
 	{
 		return board[xPosition][yPosition]==GameRules.EMPTY_PAWN;
@@ -92,7 +94,6 @@ public class GameRules
 		
 		return isValid;
 	}
-	
 	public boolean mouvementColumnEstValid(int position, int nbrPawnsInColumn){
 		boolean isValid = false;
 		
@@ -116,13 +117,12 @@ public class GameRules
 				if(!this.isCaseEmpty(board, i, j))
 				{					
 					// On calcul le nombre de piece par direction
-					int nbrPawnsInLine= this.canMoveInline(board, i);
-					int nbrPawnsInColumn=this.canMoveInColumn(board, j);
-					int nbrPawnsInDiagonal=this.canMoveDiagonal(board, i, j);
-					int nbrPawnsInInverserDiagonal=this.canMoveInverserDiagonal(board, i, j);
+					int nbrPawnsInLine= this.calculatePawnsInRow(board, i);
+					int nbrPawnsInColumn=this.calculatePawnsInColumn(board, j);
+					int nbrPawnsInDiagonal=this.calculatePawnsInDiagonal(board, i, j);
+					int nbrPawnsInInverserDiagonal=this.calculatePawnsInReverseDiagonal(board, i, j);
 					
 					// #TODO: On verifie si le mouvement est dans l'intervalle permi 
-					
 					if(mouvementLigneEstValid(j, nbrPawnsInLine)){
 						// #TODO: mettre le coup valide à jouer sous forme ex: D6D5
 						

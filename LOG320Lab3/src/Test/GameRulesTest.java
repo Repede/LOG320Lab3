@@ -13,7 +13,7 @@ public class GameRulesTest extends TestCase
 				{4,0,2,0,0,0,0,4}
 		};
 		
-		assertEquals(3, gr.canMoveInline(board, 0)); 
+		assertEquals(3, gr.calculatePawnsInRow(board, 0)); 
 	}
 	
 	public void testCanMoveInColumn001(){
@@ -30,7 +30,7 @@ public class GameRulesTest extends TestCase
 				{4}
 		};
 		
-		assertEquals(3, gr.canMoveInColumn(board, 0));
+		assertEquals(3, gr.calculatePawnsInColumn(board, 0));
 	}
 	
 	public void testCanMoveDiagonal001(){
@@ -47,7 +47,7 @@ public class GameRulesTest extends TestCase
 				{4,0,0,0,0,0,0,0}
 		};
 		
-		assertEquals(2, gr.canMoveDiagonal(board, 7, 0));
+		assertEquals(2, gr.calculatePawnsInDiagonal(board, 7, 0));
 	}
 	
 	public void testCanMoveDiagonal002(){
@@ -64,7 +64,7 @@ public class GameRulesTest extends TestCase
 				{4,0,0,0,0,2,0,0}
 		};
 		
-		assertEquals(3, gr.canMoveDiagonal(board, 7, 5));
+		assertEquals(3, gr.calculatePawnsInDiagonal(board, 7, 5));
 	}
 	
 	public void testCanMoveInverserDiagonal001(){
@@ -81,7 +81,7 @@ public class GameRulesTest extends TestCase
 				{0,0,0,0,0,0,0,4}
 		};
 	
-		assertEquals(5, gr.canMoveInverserDiagonal(board, 0, 0));
+		assertEquals(5, gr.calculatePawnsInReverseDiagonal(board, 0, 0));
 	}
 	
 	public void testCanMoveInverserDiagonal002(){
@@ -98,6 +98,6 @@ public class GameRulesTest extends TestCase
 				{0,0,0,0,0,0,0,0}
 		};
 	
-		assertEquals(3, gr.canMoveInverserDiagonal(board, 0, 4));
+		assertEquals(3, gr.calculatePawnsInReverseDiagonal(board, 0, 4));
 	}
 }
