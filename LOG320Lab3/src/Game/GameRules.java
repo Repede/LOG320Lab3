@@ -138,9 +138,7 @@ public class GameRules
 			
 			if(initialPosition+nbrPawnsInColumn > 7)
 				isValid = false;
-			
-			// Last position is an ally.
-			if(board[i][j] == thePawn){
+			else if(board[initialPosition+nbrPawnsInColumn][j] == thePawn){
 				isValid = false;
 			}
 		}
@@ -156,13 +154,11 @@ public class GameRules
 			
 			if(initialPosition-nbrPawnsInColumn<0)
 				isValid = false;
+			else if(board[initialPosition-nbrPawnsInColumn][j] == thePawn){
+				isValid = false;
+			}
 		}
-		
-		// Last position is an ally.
-		if(board[i][j] == thePawn){
-			isValid = false;
-		}
-					
+							
 		return isValid;
 	}
 	public boolean validateMouvementInDiagonal(int i, int j, int nbrPawnsInDiagonal, int[][] board, boolean downToUp){
@@ -173,7 +169,7 @@ public class GameRules
 		int initialPositionJ = j;
 		
 		if(downToUp){
-			while(i > initialPositionI-nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal){
+			while(i > initialPositionI-nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal && i != -1 && j != -1){
 				if(board[i][j] != thePawn && board[i][j] != 0){
 					isValid = false;
 				}
@@ -192,7 +188,7 @@ public class GameRules
 			
 		}
 		else{
-			while(i < initialPositionI+nbrPawnsInDiagonal && j > initialPositionJ-nbrPawnsInDiagonal){
+			while(i < initialPositionI+nbrPawnsInDiagonal && j > initialPositionJ-nbrPawnsInDiagonal && i != 8 && j != 8){
 				if(board[i][j] != thePawn && board[i][j] != 0){
 					isValid = false;
 				}
@@ -213,39 +209,47 @@ public class GameRules
 	}
 	public boolean validateMouvementInReverseDiagonal(int i, int j, int nbrPawnsInDiagonal, int[][] board, boolean downToUp){
 		// Diagonal = right to left
-				boolean isValid = true;
-				int thePawn = board[i][j];
-				 
-				if(downToUp){
-					while(i > i-nbrPawnsInDiagonal && j < j-nbrPawnsInDiagonal){
-						if(board[i][j] != thePawn && board[i][j] != 0){
-							isValid = false;
-						}
-						
-						j--;
-						i--;
-					}
-					
-					if(isValid && i-nbrPawnsInDiagonal<0 && j-nbrPawnsInDiagonal>7){
-						isValid = false;
-					}
-				}
-				else{
-					while(i > i+nbrPawnsInDiagonal && j < j+nbrPawnsInDiagonal){
-						if(board[i][j] != thePawn && board[i][j] != 0){
-							isValid = false;
-						}
-						
-						j++;
-						i++;
-					}
-					
-					if(isValid && i+nbrPawnsInDiagonal>7 && j+nbrPawnsInDiagonal<0){
-						isValid = false;
-					}
+		boolean isValid = true;
+		int thePawn = board[i][j];
+		int initialPositionI = i;
+		int initialPositionJ = j;
+		
+		if(downToUp){
+			while(i > initialPositionI-nbrPawnsInDiagonal && j > initialPositionJ-nbrPawnsInDiagonal && i != -1 && j != -1){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
 				}
 				
-				return isValid;
+				j--;
+				i--;
+			}
+			
+			if(initialPositionI-nbrPawnsInDiagonal<0 && initialPositionJ-nbrPawnsInDiagonal<0){
+				isValid = false;
+			}
+			else if( board[initialPositionI-nbrPawnsInDiagonal][initialPositionJ-nbrPawnsInDiagonal] == thePawn){
+				isValid = false;
+			}
+		}
+		else{
+			while(i < initialPositionI+nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal && i != 8 && j != 8){
+				if(board[i][j] != thePawn && board[i][j] != 0){
+					isValid = false;
+				}
+				
+				j++;
+				i++;
+			}
+			
+			if(initialPositionI+nbrPawnsInDiagonal>7 && initialPositionJ+nbrPawnsInDiagonal>7){
+				isValid = false;
+			}
+			else if( board[initialPositionI+nbrPawnsInDiagonal][initialPositionJ+nbrPawnsInDiagonal] == thePawn){
+				isValid = false;
+			}
+		}
+		
+		return isValid;
 	}
 	
 	public List<String> generateMoves(int[][] board, int myColor)

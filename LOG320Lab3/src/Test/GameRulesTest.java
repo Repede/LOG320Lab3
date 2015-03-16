@@ -146,37 +146,42 @@ public class GameRulesTest extends TestCase
 		GameRules gr = new GameRules();
 		
 		int[][] board = {
-				{2,2,2,4,0,2,4,2},
-				{2,0,0,0,0,2,0,0},
-				{0,0,0,0,0,0,4,0},
-				{0,0,0,0,0,0,0,2},
+				{2,2,4,2,2,0,0,0},
+				{2,0,2,0,0,0,0,0},
+				{0,2,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0}
+				{0,0,0,0,2,0,0,0},
+				{0,0,0,2,2,0,0,0}
 		};
 		
-		assertTrue(gr.validateMouvementInColumn(0, 6, 2, board, true) == false);
-		assertTrue(gr.validateMouvementInColumn(0, 7, 2, board, true) == true);
-		assertTrue(gr.validateMouvementInColumn(0, 5, 2, board, true) == true);		
+		assertTrue(gr.validateMouvementInColumn(0, 0, 2, board, true) == true);
+		assertTrue(gr.validateMouvementInColumn(0, 1, 2, board, true) == false);
+		assertTrue(gr.validateMouvementInColumn(0, 2, 2, board, true) == false);
+		assertTrue(gr.validateMouvementInColumn(7, 3, 2, board, true) == false);
+		assertTrue(gr.validateMouvementInColumn(0, 4, 3, board, true) == true);
 	}
 	
 	public void testValidateMouvementInColumnUp001(){
 		GameRules gr = new GameRules();
 		
 		int[][] board = {
-				{0,2,2,4,0,0,4,2},
-				{0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,4,0},
-				{0,0,0,0,0,0,0,2},
+				{0,0,0,2,2,0,0,0},
+				{0,0,0,0,2,0,0,0},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0}
+				{0,2,0,0,0,0,0,0},
+				{2,0,2,0,0,0,0,0},
+				{2,2,4,2,2,0,0,0}
 		};
 		
-		assertTrue(gr.validateMouvementInColumn(2, 6, 4, board, false) == false);
-		assertTrue(gr.validateMouvementInColumn(3, 7, 2, board, false) == true);
+		assertTrue(gr.validateMouvementInColumn(7, 0, 2, board, false) == true);
+		assertTrue(gr.validateMouvementInColumn(7, 1, 2, board, false) == false);
+		assertTrue(gr.validateMouvementInColumn(7, 2, 2, board, false) == false);
+		assertTrue(gr.validateMouvementInColumn(0, 3, 2, board, false) == false);
+		assertTrue(gr.validateMouvementInColumn(7, 4, 3, board, false) == true);
 	}
 	
 	public void testValidateMouvementInDiagonalUp(){
@@ -193,7 +198,7 @@ public class GameRulesTest extends TestCase
 				{2,4,2,4,0,0,0,0}
 		};
 		
-		assertTrue(gr.validateMouvementInDiagonal(7, 0, 3, board, true) == true);
+		assertTrue(gr.validateMouvementInDiagonal(0, 7, 3, board, true) == false);
 		assertTrue(gr.validateMouvementInDiagonal(7, 1, 2, board, true) == true);
 		assertTrue(gr.validateMouvementInDiagonal(7, 2, 2, board, true) == false);
 		assertTrue(gr.validateMouvementInDiagonal(7, 3, 2, board, true) == false);
@@ -210,12 +215,52 @@ public class GameRulesTest extends TestCase
 				{0,0,0,2,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0}
+				{2,0,0,0,0,0,0,0}
 		};
 		
-		assertTrue(gr.validateMouvementInDiagonal(0, 7, 3, board, false) == true);
+		assertTrue(gr.validateMouvementInDiagonal(7, 0, 4, board, false) == false);
 		assertTrue(gr.validateMouvementInDiagonal(0, 6, 2, board, false) == true);
 		assertTrue(gr.validateMouvementInDiagonal(0, 5, 2, board, false) == false);
 		assertTrue(gr.validateMouvementInDiagonal(0, 4, 2, board, false) == false);
+	}
+
+	public void testValidateMouvementInReverseDiagonalUp(){
+		GameRules gr = new GameRules();
+		
+		int[][] board = {
+				{2,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,2,0,2,0,0},
+				{0,0,0,2,0,4,0,0},
+				{0,0,0,0,4,2,4,2}
+		};
+		
+		assertTrue(gr.validateMouvementInReverseDiagonal(0, 0, 3, board, true) == false);
+		assertTrue(gr.validateMouvementInReverseDiagonal(7, 6, 2, board, true) == true);
+		assertTrue(gr.validateMouvementInReverseDiagonal(7, 5, 2, board, true) == false);
+		assertTrue(gr.validateMouvementInReverseDiagonal(7, 4, 2, board, true) == false);
+	}
+	
+	public void testValidateMouvementInReverseDiagonalDown(){
+		GameRules gr = new GameRules();
+				
+		int[][] board = {
+				{2,4,2,4,0,0,0,0},
+				{0,0,4,0,2,0,0,0},
+				{0,0,2,0,2,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,2}
+		};
+		
+		assertTrue(gr.validateMouvementInReverseDiagonal(7, 7, 3, board, false) == false);
+		assertTrue(gr.validateMouvementInReverseDiagonal(0, 1, 2, board, false) == true);
+		assertTrue(gr.validateMouvementInReverseDiagonal(0, 2, 2, board, false) == false);
+		assertTrue(gr.validateMouvementInReverseDiagonal(0, 3, 2, board, false) == false);
 	}
 }
