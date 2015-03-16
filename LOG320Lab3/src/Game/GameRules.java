@@ -38,15 +38,13 @@ public class GameRules
 	{
 		int pawnCounter=0;
 		//looking upper position from original position. Parcours de bas vers le haut, gauche à droite
-		while(currentX<8 && currentY>0)
+		while(currentX<7 && currentY>0)
 		{
 			currentX++;
 			currentY--;
 		}
 		while(currentX>=0 && currentY<=7)
-		{
-			System.out.println(board[currentX][currentY]);
-			
+		{			
 			if(!isCaseEmpty(board,currentX,currentY))
 				pawnCounter++;
 			
@@ -59,15 +57,18 @@ public class GameRules
 	{
 		int pawnCounter=0;
 		//looking upper position from original position
-		while(currentX<7&&currentY>0)
+		while(currentX>0&&currentY>0)
 		{
-			currentX++;
+			currentX--;
 			currentY--;
 		}
-		while(currentX>0&&currentY<8)
-		{
-			if(!isCaseEmpty(board,currentX--,currentY++))
+		while(currentX<=7&&currentY<=7)
+		{			
+			if(!isCaseEmpty(board,currentX,currentY))
 				pawnCounter++;
+			
+			currentX++;
+			currentY++;
 		}
 		return pawnCounter;
 	}
