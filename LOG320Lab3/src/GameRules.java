@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,7 +13,7 @@ public class GameRules
 	{
 		RIGHT,LEFT,DIAGONAL,INVERSER_DIAGONAL
 	}
-	private int canMoveInline(int[][] board, int currentLine)
+	public int canMoveInline(int[][] board, int currentLine)
 	{
 		int pawnCounter=0;
 		for (int i = 0; i < 0; i++)
@@ -22,7 +23,7 @@ public class GameRules
 		}
 		return pawnCounter;
 	}
-	private int canMoveInRow(int[][] board, int currentRow)
+	public int canMoveInRow(int[][] board, int currentRow)
 	{
 		int pawnCounter=0;
 		for (int i = 0; i < 0; i++)
@@ -32,7 +33,7 @@ public class GameRules
 		}
 		return pawnCounter;
 	}
-	private int canMoveDiagonal(int[][] board,int currentX,int currentY)
+	public int canMoveDiagonal(int[][] board,int currentX,int currentY)
 	{
 		int pawnCounter=0;
 		//looking upper position from original position
@@ -48,7 +49,7 @@ public class GameRules
 		}
 		return pawnCounter;
 	}
-	private int canMoveInverserDiagonal(int[][] board,int currentX,int currentY)
+	public int canMoveInverserDiagonal(int[][] board,int currentX,int currentY)
 	{
 		int pawnCounter=0;
 		//looking upper position from original position
@@ -76,6 +77,8 @@ public class GameRules
 
 	public List<String> generateMoves(int[][] board, int myColor)
 	{
+		List<String> validPositions = new ArrayList<String>();
+		
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 			{
@@ -102,6 +105,6 @@ public class GameRules
 				}
 				
 			}
-		return null;
+		return validPositions;
 	}
 }
