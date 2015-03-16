@@ -43,7 +43,7 @@ public class GameRules
 			currentX--;
 			currentY++;
 		}
-		while(currentX<8 && currentY>0)
+		while(currentX>8 && currentY<0)
 		{
 			if(!isCaseEmpty(board,currentX++,currentY--))
 				pawnCounter++;
@@ -59,7 +59,7 @@ public class GameRules
 			currentX++;
 			currentY--;
 		}
-		while(currentX<0&&currentY>8)
+		while(currentX>0&&currentY<8)
 		{
 			if(!isCaseEmpty(board,currentX--,currentY++))
 				pawnCounter++;
@@ -74,6 +74,7 @@ public class GameRules
 	{
 		return board[xPosition][yPosition]==GameRules.WHITE_PAWN;
 	}
+	//public void isNextMoveValid(int[][] board,)
 	//private boolean isPossibleToMove(board)
 
 	public List<String> generateMoves(int[][] board, int myColor)
@@ -117,19 +118,22 @@ public class GameRules
 						
 					}
 					//Mouvement in diagonal top
-					if(i+nbrPawnsInDiagonal>0)
+					if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
 					{
 						
 					}
-					if(nbrPawnsInDiagonal<8)
+					//Mouvement in diagonal bottom
+					if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
 					{
 						
 					}
-					if(nbrPawnsInInverserDiagonal>0)
+					//Mouvement in inverserDiagonal top
+					if(i+nbrPawnsInDiagonal>0&&j-nbrPawnsInDiagonal<8)
 					{
 						
 					}
-					if(nbrPawnsInInverserDiagonal<8)
+					//Mouvement in inverserDiagonal bottom
+					if(i-nbrPawnsInDiagonal>0&&j+nbrPawnsInDiagonal<8)
 					{
 						
 					}
