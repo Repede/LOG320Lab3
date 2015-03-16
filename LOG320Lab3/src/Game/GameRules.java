@@ -1,5 +1,4 @@
 package Game;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +17,14 @@ public class GameRules
 	public int canMoveInline(int[][] board, int currentLine)
 	{
 		int pawnCounter=0;
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			if(!isCaseEmpty(board,currentLine,i))
 				pawnCounter++;
 		}
 		return pawnCounter;
 	}
-	public int canMoveInRow(int[][] board, int currentRow)
+	public int canMoveInColumn(int[][] board, int currentRow)
 	{
 		int pawnCounter=0;
 		for (int i = 0; i < 0; i++)
@@ -89,20 +88,51 @@ public class GameRules
 				{
 					//on verifie le nombre de cases que la piece peut avancer
 					int nbrPawnsInLine= this.canMoveInline(board, i);
-					int nbrPawnsInRows=this.canMoveInRow(board, j);
+					int nbrPawnsInColumn=this.canMoveInColumn(board, j);
 					int nbrPawnsInDiagonal=this.canMoveDiagonal(board, i, j);
 					int nbrPawnsInInverserDiagonal=this.canMoveInverserDiagonal(board, i, j);
 					//on verifie si le mouvement est dans l'intervalle permi, 
 					//si la case n'est pas ocupper par un pion 
 					//si le existe un autre pion adversaire dans le chemin
 					
-					//Mouvement inline
-					if(nbrPawnsInLine>0)
+					//Mouvement inline droite
+					if(i-nbrPawnsInLine>0)
 					{
 						
 					}
-					//if(nbrPawnsInLine<8)
-					
+					//Mouvement inline gauche
+					if(i+nbrPawnsInLine<8)
+					{
+						
+					}
+					//Mouvement in row top
+					if(j-nbrPawnsInColumn>0)
+					{
+						
+						
+					}
+					//Mouvement in row bottom
+					if(j+nbrPawnsInColumn<8)
+					{
+						
+					}
+					//Mouvement in diagonal top
+					if(i+nbrPawnsInDiagonal>0)
+					{
+						
+					}
+					if(nbrPawnsInDiagonal<8)
+					{
+						
+					}
+					if(nbrPawnsInInverserDiagonal>0)
+					{
+						
+					}
+					if(nbrPawnsInInverserDiagonal<8)
+					{
+						
+					}
 					
 				}
 				
