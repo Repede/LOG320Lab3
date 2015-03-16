@@ -37,16 +37,21 @@ public class GameRules
 	public int canMoveDiagonal(int[][] board,int currentX,int currentY)
 	{
 		int pawnCounter=0;
-		//looking upper position from original position
-		while(currentX<0 || currentY>7)
+		//looking upper position from original position. Parcours de bas vers le haut, gauche à droite
+		while(currentX<8 && currentY>0)
 		{
+			currentX++;
+			currentY--;
+		}
+		while(currentX>=0 && currentY<=7)
+		{
+			System.out.println(board[currentX][currentY]);
+			
+			if(!isCaseEmpty(board,currentX,currentY))
+				pawnCounter++;
+			
 			currentX--;
 			currentY++;
-		}
-		while(currentX>8 && currentY<0)
-		{
-			if(!isCaseEmpty(board,currentX++,currentY--))
-				pawnCounter++;
 		}
 		return pawnCounter;
 	}
@@ -54,7 +59,7 @@ public class GameRules
 	{
 		int pawnCounter=0;
 		//looking upper position from original position
-		while(currentX<7||currentY>0)
+		while(currentX<7&&currentY>0)
 		{
 			currentX++;
 			currentY--;
