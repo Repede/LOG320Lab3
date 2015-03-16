@@ -169,7 +169,7 @@ public class GameRules
 		int initialPositionJ = j;
 		
 		if(downToUp){
-			while(i > initialPositionI-nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal && i != -1 && j != -1){
+			while(i > initialPositionI-nbrPawnsInDiagonal && j < initialPositionJ+nbrPawnsInDiagonal && i != -1 && j != 8){
 				if(board[i][j] != thePawn && board[i][j] != 0){
 					isValid = false;
 				}
@@ -179,7 +179,7 @@ public class GameRules
 				
 			}
 			
-			if(initialPositionI-nbrPawnsInDiagonal<0 && initialPositionJ+nbrPawnsInDiagonal>7){
+			if(initialPositionI-nbrPawnsInDiagonal<0 || initialPositionJ+nbrPawnsInDiagonal>7){
 				isValid = false;
 			}
 			else if( board[initialPositionI-nbrPawnsInDiagonal][initialPositionJ+nbrPawnsInDiagonal] == thePawn){
@@ -197,7 +197,7 @@ public class GameRules
 				i++;
 			}
 			
-			if(initialPositionI+nbrPawnsInDiagonal>7 && initialPositionJ-nbrPawnsInDiagonal<0){
+			if(initialPositionI+nbrPawnsInDiagonal>7 || initialPositionJ-nbrPawnsInDiagonal<0){
 				isValid = false;
 			}
 			else if( board[initialPositionI+nbrPawnsInDiagonal][initialPositionJ-nbrPawnsInDiagonal] == thePawn){
@@ -224,7 +224,7 @@ public class GameRules
 				i--;
 			}
 			
-			if(initialPositionI-nbrPawnsInDiagonal<0 && initialPositionJ-nbrPawnsInDiagonal<0){
+			if(initialPositionI-nbrPawnsInDiagonal<0 || initialPositionJ-nbrPawnsInDiagonal<0){
 				isValid = false;
 			}
 			else if( board[initialPositionI-nbrPawnsInDiagonal][initialPositionJ-nbrPawnsInDiagonal] == thePawn){
@@ -241,7 +241,7 @@ public class GameRules
 				i++;
 			}
 			
-			if(initialPositionI+nbrPawnsInDiagonal>7 && initialPositionJ+nbrPawnsInDiagonal>7){
+			if(initialPositionI+nbrPawnsInDiagonal>7 || initialPositionJ+nbrPawnsInDiagonal>7){
 				isValid = false;
 			}
 			else if( board[initialPositionI+nbrPawnsInDiagonal][initialPositionJ+nbrPawnsInDiagonal] == thePawn){
@@ -270,31 +270,31 @@ public class GameRules
 					
 					// On verifie si le mouvement est dans l'intervalle permi 
 					if(validateMouvementInRow(i, j, nbrPawnsInLine, board, true)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i) + String.valueOf(j - nbrPawnsInLine ));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i) + Integer.toString(j - nbrPawnsInLine ));
 					}
 					if(validateMouvementInRow(i, j, nbrPawnsInLine, board, false)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i) + String.valueOf(j + nbrPawnsInLine ));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i) + Integer.toString(j + nbrPawnsInLine ));
 					}
 					
 					if(validateMouvementInColumn(i, j, nbrPawnsInColumn, board, true)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i - nbrPawnsInColumn ) + String.valueOf(j));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i + nbrPawnsInColumn ) + Integer.toString(j));
 					}
 					if(validateMouvementInColumn(i, j, nbrPawnsInColumn, board, false)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i + nbrPawnsInColumn ) + String.valueOf(j));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i - nbrPawnsInColumn ) + Integer.toString(j));
 					}
 					
 					if(validateMouvementInDiagonal(i, j, nbrPawnsInDiagonal, board, true)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i - nbrPawnsInDiagonal ) + String.valueOf(j + nbrPawnsInDiagonal));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i - nbrPawnsInDiagonal ) + Integer.toString(j + nbrPawnsInDiagonal));
 					}
 					if(validateMouvementInDiagonal(i, j, nbrPawnsInDiagonal, board, true)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i + nbrPawnsInDiagonal ) + String.valueOf(j - nbrPawnsInDiagonal));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i + nbrPawnsInDiagonal ) + Integer.toString(j - nbrPawnsInDiagonal));
 					}
 					
 					if(validateMouvementInReverseDiagonal(i, j, nbrPawnsInReverseDiagonal, board, true)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i + nbrPawnsInDiagonal ) + String.valueOf(j + nbrPawnsInDiagonal));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i + nbrPawnsInDiagonal ) + Integer.toString(j + nbrPawnsInDiagonal));
 					}
 					if(validateMouvementInReverseDiagonal(i, j, nbrPawnsInReverseDiagonal, board, true)){
-						validPositions.add(String.valueOf(i) + String.valueOf(j) + String.valueOf(i - nbrPawnsInDiagonal ) + String.valueOf(j - nbrPawnsInDiagonal));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i - nbrPawnsInDiagonal ) + Integer.toString(j - nbrPawnsInDiagonal));
 					}					
 				}
 				

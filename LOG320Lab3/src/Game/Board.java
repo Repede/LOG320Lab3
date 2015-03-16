@@ -94,7 +94,7 @@ public class Board
 				x = 7;
 		     	break;
 			default: 
-				System.out.println("Non ça me tente pas de faire que ya un problème.");
+				System.out.println("Problème d affichage du tableau.");
 		  		break;
 		}
 		boardCoord[0] = 8-y;

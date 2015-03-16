@@ -1,11 +1,14 @@
 package Game;
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 class Client
 {
 	public static void main(String[] args)
 	{
+		GameRules gameRules = new GameRules();
+		Evaluator evaluator = new Evaluator();
 		Board gameBoard = new Board();
 		Socket MyClient;
 		BufferedInputStream input;
@@ -47,9 +50,12 @@ class Client
 
 					gameBoard.displayBoard();
 					
-					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");
-					String move = null;
-					move = console.readLine();
+					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");				
+					
+					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), GameRules.WHITE_PAWN);
+					String move = evaluator.RetrieveBestMove(validPositions);
+					System.out.println(move);
+					
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
@@ -109,8 +115,10 @@ class Client
 				if (cmd == '4')
 				{
 					System.out.print("Coup invalide, entrez un nouveau coup : ");
-					String move = null;
-					move = console.readLine();
+
+					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), GameRules.WHITE_PAWN);
+					String move = evaluator.RetrieveBestMove(validPositions);
+					System.out.println("Move: " + move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
