@@ -12,7 +12,8 @@ class Client
 		Board gameBoard = new Board();
 		Socket MyClient;
 		BufferedInputStream input;
-		BufferedOutputStream output;;
+		BufferedOutputStream output;
+		int currentColor = 0;
 		try
 		{
 			MyClient = new Socket("localhost", 8888);
@@ -28,6 +29,7 @@ class Client
 				// Début de la partie en joueur blanc
 				if (cmd == '1')
 				{
+					currentColor = GameRules.WHITE_PAWN;
 					byte[] aBuffer = new byte[1024];
 
 					int size = input.available();
@@ -52,7 +54,7 @@ class Client
 					
 					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");				
 					
-					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), GameRules.WHITE_PAWN);
+					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
 					String move = evaluator.RetrieveBestMove(validPositions);
 					System.out.println(move);
 					
@@ -65,6 +67,7 @@ class Client
 				// Début de la partie en joueur Noir
 				if (cmd == '2')
 				{
+					currentColor = GameRules.BLACK_PAWN;
 					System.out.print("Nouvelle partie! Vous jouer noir, attendez le coup des blancs");
 					byte[] aBuffer = new byte[1024];
 
@@ -102,8 +105,11 @@ class Client
 					gameBoard.displayBoard();
 					System.out.print("Dernier coup : " + s);
 					System.out.print("\nEntrez votre coup : ");
-					String move = null;
-					move = console.readLine();
+					
+					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
+					String move = evaluator.RetrieveBestMove(validPositions);
+					System.out.println(move);
+					
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
@@ -116,7 +122,7 @@ class Client
 				{
 					System.out.print("Coup invalide, entrez un nouveau coup : ");
 
-					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), GameRules.WHITE_PAWN);
+					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
 					String move = evaluator.RetrieveBestMove(validPositions);
 					System.out.println("Move: " + move);
 					System.out.print("\n");
