@@ -27,7 +27,7 @@ public class GameRules
 	public int canMoveInColumn(int[][] board, int currentRow)
 	{
 		int pawnCounter=0;
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			if(!isCaseEmpty(board,i,currentRow))
 				pawnCounter++;
