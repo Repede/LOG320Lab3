@@ -7,8 +7,8 @@ public class GameRules
 {
 	//Lorsque on trouve un endroit, on retourne la quantite de cases qu'on
 	//peut bouger.Il retour -1 lorsque il y a pas de movement.
-	public static final int BLACK_PAWN=4;
-	public static final int WHITE_PAWN=2;
+	public static final int BLACK_PAWN=2;
+	public static final int WHITE_PAWN=4;
 	public static final int EMPTY_PAWN=0;
 	public enum POSSIBLE_MOVES
 	{
@@ -330,14 +330,15 @@ public class GameRules
 					}
 					
 					if(validateMouvementInReverseDiagonal(i, j, nbrPawnsInReverseDiagonal, board, false)){
-						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i + nbrPawnsInDiagonal ) + Integer.toString(j + nbrPawnsInDiagonal));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i + nbrPawnsInReverseDiagonal ) + Integer.toString(j + nbrPawnsInReverseDiagonal));
 					}
 					if(validateMouvementInReverseDiagonal(i, j, nbrPawnsInReverseDiagonal, board, true)){
-						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i - nbrPawnsInDiagonal ) + Integer.toString(j - nbrPawnsInDiagonal));
+						validPositions.add(Integer.toString(i) + Integer.toString(j) + Integer.toString(i - nbrPawnsInReverseDiagonal ) + Integer.toString(j - nbrPawnsInReverseDiagonal));
 					}					
 				}
 				
 			}
+		
 		return validPositions;
 	}
 }

@@ -42,7 +42,7 @@ class Client
 					int x = 0, y = 0;
 					for (int i = 0; i < boardValues.length; i++)
 					{
-						gameBoard.setBoardValue(x, y, Integer.parseInt(boardValues[i]));
+						gameBoard.setBoardValue(y, x, Integer.parseInt(boardValues[i]));
 						x++;
 						if (x == 8)
 						{
@@ -81,7 +81,7 @@ class Client
 					int x = 0, y = 0;
 					for (int i = 0; i < boardValues.length; i++)
 					{
-						gameBoard.setBoardValue(x, y, Integer.parseInt(boardValues[i]));
+						gameBoard.setBoardValue(y, x, Integer.parseInt(boardValues[i]));
 						x++;
 						if (x == 8)
 						{

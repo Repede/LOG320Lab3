@@ -229,9 +229,9 @@ public class GameRulesTest extends TestCase
 		GameRules gr = new GameRules();
 		
 		int[][] board = {
-				{2,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0},
+				{2,0,0,0,0,2,0,0},
+				{0,0,0,0,0,0,2,0},
+				{0,0,0,0,0,0,0,2},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,2,0,2,0,0},
@@ -243,6 +243,8 @@ public class GameRulesTest extends TestCase
 		assertTrue(gr.validateMouvementInReverseDiagonal(7, 6, 2, board, true) == true);
 		assertTrue(gr.validateMouvementInReverseDiagonal(7, 5, 2, board, true) == false);
 		assertTrue(gr.validateMouvementInReverseDiagonal(7, 4, 2, board, true) == false);
+		assertTrue(gr.validateMouvementInReverseDiagonal(2, 7, 2, board, true) == false);
+		assertTrue(gr.validateMouvementInReverseDiagonal(2, 7, 3, board, true) == false);
 	}
 	
 	public void testValidateMouvementInReverseDiagonalDown(){
