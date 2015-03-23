@@ -26,7 +26,7 @@ public class Evaluator
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			node.setValue(this.calculateBoardWeight(referenceBoard));
+			node.setValue(this.calculateBoardWeight(referenceBoard.getBoard(), color));
 			//On met la racine dans la liste
 			minMaxDictionary.put(i,node);
 			//On recr�� le board
@@ -56,7 +56,7 @@ public class Evaluator
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			node.setValue(this.calculateBoardWeight(referenceBoard));
+			node.setValue(this.calculateBoardWeight(referenceBoard.getBoard(), color));
 			node.setParent(rootBoard);
 			//On met la racine dans la liste
 			minMaxDictionary.put(i,node);
@@ -65,9 +65,15 @@ public class Evaluator
 		}
 	}
 	
-	private int calculateBoardWeight(Board board)
+	private int calculateBoardWeight(int board[][], int color)
 	{
 		// basé sur http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.3549&rep=rep1&type=pdf
+		/*
+		 *  Quelque questions:
+		 *  1: Est-ce qu'un Quad est valide lorsqu'il y a un pion adverse dans son square?
+		 *  	- Pour l'instant, un quad est valide lorqu'un square possède seulement la même couleur.
+		 */
+		
 		int numberQuad1 = 0;
 		int numberQuad3 = 0;
 		int numberQuadd = 0;
@@ -77,12 +83,12 @@ public class Evaluator
 			for(int j = 0 ; j < 7 ; j++)
 			{
 				// calcul de Q1
-				numberQuad1 += validateQuad1(board.getBoard(), i, j);
+				numberQuad1 += validateQuad1(board, i, j, color);
 				// calcul de Q3
-				numberQuad3 += validateQuad3(board.getBoard(), i, j);
+				numberQuad3 += validateQuad3(board, i, j, color);
 				// calcul de Qd
-				numberQuadd += validateQuadd(board.getBoard(), i, j);
-;			}
+				numberQuadd += validateQuadd(board, i, j, color);
+			}
 		}
 		
 		// calculate Euler E = ( ∑Q1 −∑Q3 − 2 ∑Qd) / 4 
@@ -96,21 +102,22 @@ public class Evaluator
 	 * @param board
 	 * @param i
 	 * @param j
+	 * @param color
 	 * @return
 	 */
-	private int validateQuadd(int[][] board, int i, int j)
+	public int validateQuadd(int[][] board, int i, int j, int color)
 	{
 		// premier cas
-		if(board[i][j] == 1)
+		if(board[i][j] == color)
 		{
-			if(board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 1 ){
+			if(board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == color ){
 				return 1;
 			}
 		}
 		// deuxieme cas
 		else if(board[i][j] == 0)
 		{
-			if(board[i][j+1] == 1  &&  board[i+1][j] == 1  &&  board[i+1][j+1] == 0 ){
+			if(board[i][j+1] == color  &&  board[i+1][j] == color  &&  board[i+1][j+1] == 0 ){
 				return 1;
 			}	
 		}
@@ -125,16 +132,29 @@ public class Evaluator
 	 * @param board
 	 * @param i
 	 * @param j
+	 * @param color
 	 * @return
 	 */
-	private int validateQuad3(int[][] board, int i, int j)
+	public int validateQuad3(int[][] board, int i, int j, int color)
 	{
-		if(board[i][j] == 1)
-		{
-			if(board[i][j+1] == 1  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 1 ){
-				return 1;
-			}
+		
+		// bas gauche vide
+		if(board[i][j] == color && board[i][j+1] == color  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == color ){
+			return 1;
 		}
+		// bas droite vide
+		if(board[i][j] == color && board[i][j+1] == color  &&  board[i+1][j] == color  &&  board[i+1][j+1] == 0 ){
+			return 1;
+		}
+		// haut gauche vide
+		if(board[i][j] == 0 && board[i][j+1] == color  &&  board[i+1][j] == color  &&  board[i+1][j+1] == color ){
+			return 1;
+		}
+		// haut droite vide
+		if(board[i][j] == color && board[i][j+1] == 0  &&  board[i+1][j] == color  &&  board[i+1][j+1] == color ){
+			return 1;
+		}
+		
 		return 0;
 	}
 
@@ -145,11 +165,12 @@ public class Evaluator
 	 * @param board
 	 * @param i
 	 * @param j
+	 * @param color
 	 * @return
 	 */
-	private int validateQuad1(int[][] board, int i, int j)
+	private int validateQuad1(int[][] board, int i, int j, int color)
 	{
-		if(board[i][j] == 1)
+		if(board[i][j] == color)
 		{
 			if(board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 0 ){
 				return 1;
