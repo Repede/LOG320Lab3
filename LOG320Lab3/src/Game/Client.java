@@ -56,14 +56,14 @@ class Client
 					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");				
 					
 					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					String move = gameBoard.boardIndexToLetter(evaluator.RetrieveBestMove(validPositions));
+					/*String move = gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves(validPositions));
 					System.out.println(move);
 					
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
-					output.flush();
+					output.flush();*/
 				}
 				// Début de la partie en joueur Noir
 				if (cmd == '2')
@@ -110,14 +110,14 @@ class Client
 					System.out.print("\nEntrez votre coup : ");
 					
 					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					String move = gameBoard.boardIndexToLetter(evaluator.RetrieveBestMove(validPositions));
+					/*String move = gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves(validPositions));
 					System.out.println(move);
 					
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
-					output.flush();
+					output.flush();*/
 
 				}
 				// Le dernier coup est invalide
@@ -127,13 +127,13 @@ class Client
 					System.out.print("Coup invalide, entrez un nouveau coup : ");
 
 					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					String move = gameBoard.boardIndexToLetter(evaluator.RetrieveBestMove(validPositions));
+					/*String move = gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves(validPositions));
 
 					System.out.println("Move: " + move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
-					output.flush();
+					output.flush();*/
 
 				}
 			}

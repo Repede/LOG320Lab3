@@ -4,6 +4,15 @@ public class Board
 {
 	private int[][] board = new int[8][8];
 	
+	public Board(Board nBoard)
+	{
+		this.setBoard(nBoard.getBoard());
+	}
+	
+	public Board()
+	{
+	}
+	
 	public void displayBoard()
 	{
 		StringBuilder boardDisplay = new StringBuilder("");
@@ -159,7 +168,7 @@ public class Board
 	
 	public void setBoard(int[][] board)
 	{
-		this.board = board;
+		this.board = board.clone();
 	}
 	
 	public int getBoardValue(int x, int y)
