@@ -15,11 +15,11 @@ public class Evaluator
 	public Map<Integer,MinMaxNode> evaluateBestMoves(List<String> validPositions, Board rootBoard, int color)
 	{
 		Map<Integer,MinMaxNode> minMaxDictionary = new HashMap<Integer,MinMaxNode>();
-		//On garde une copie du rootBoard pour pouvoir évaluer plusieurs moves du root
+		//On garde une copie du rootBoard pour pouvoir ï¿½valuer plusieurs moves du root
 		Board referenceBoard = new Board(rootBoard);
 		for(int i = 0 ; i < validPositions.size() ; ++i)
 		{
-			//On Prépare une racine
+			//On Prï¿½pare une racine
 			MinMaxNode node = new MinMaxNode();
 			//2 Transformer les validPositions en board (on fait le move dans referenceBoard selon la couleur)
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
@@ -29,7 +29,7 @@ public class Evaluator
 			node.setValue(this.calculateBoardWeight(referenceBoard));
 			//On met la racine dans la liste
 			minMaxDictionary.put(i,node);
-			//On recréé le board
+			//On recrï¿½ï¿½ le board
 			referenceBoard = new Board(rootBoard);
 		}
 		
@@ -45,11 +45,11 @@ public class Evaluator
 	public void createParentsChildren(List<String> validPositions, MinMaxNode rootBoard, int color)
 	{
 		Map<Integer,MinMaxNode> minMaxDictionary = new HashMap<Integer,MinMaxNode>();
-		//On garde une copie du rootBoard pour pouvoir évaluer plusieurs moves du root
+		//On garde une copie du rootBoard pour pouvoir ï¿½valuer plusieurs moves du root
 		Board referenceBoard = new Board(rootBoard.getBoard());
 		for(int i = 0 ; i < validPositions.size() ; ++i)
 		{
-			//On Prépare une racine
+			//On Prï¿½pare une racine
 			MinMaxNode node = new MinMaxNode();
 			//2 Transformer les validPositions en board (on fait le move dans referenceBoard selon la couleur)
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
@@ -60,13 +60,102 @@ public class Evaluator
 			node.setParent(rootBoard);
 			//On met la racine dans la liste
 			minMaxDictionary.put(i,node);
-			//On recréé le board
+			//On recrï¿½ï¿½ le board
 			referenceBoard = new Board(rootBoard.getBoard());
 		}
 	}
 	
 	private int calculateBoardWeight(Board board)
 	{
+		// basÃ© sur http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.3549&rep=rep1&type=pdf
+		int numberQuad1 = 0;
+		int numberQuad3 = 0;
+		int numberQuadd = 0;
+		
+		for(int i = 0 ; i < 7 ; i++)
+		{
+			for(int j = 0 ; j < 7 ; j++)
+			{
+				// calcul de Q1
+				numberQuad1 += validateQuad1(board.getBoard(), i, j);
+				// calcul de Q3
+				numberQuad3 += validateQuad3(board.getBoard(), i, j);
+				// calcul de Qd
+				numberQuadd += validateQuadd(board.getBoard(), i, j);
+;			}
+		}
+		
+		// calculate Euler E = ( âˆ‘Q1 âˆ’âˆ‘Q3 âˆ’ 2 âˆ‘Qd) / 4 
+		return (numberQuad1 - numberQuad3 - 2*numberQuadd) / 4;
+	}
+
+	/**
+	 * Quad d
+	 * |1|0|  et  |0|1|
+	 * |0|1|      |1|0|
+	 * @param board
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	private int validateQuadd(int[][] board, int i, int j)
+	{
+		// premier cas
+		if(board[i][j] == 1)
+		{
+			if(board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 1 ){
+				return 1;
+			}
+		}
+		// deuxieme cas
+		else if(board[i][j] == 0)
+		{
+			if(board[i][j+1] == 1  &&  board[i+1][j] == 1  &&  board[i+1][j+1] == 0 ){
+				return 1;
+			}	
+		}
+	
+		return 0;
+	}
+
+	/**
+	 * Quad 3
+	 * |1|1|
+	 * |0|1|
+	 * @param board
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	private int validateQuad3(int[][] board, int i, int j)
+	{
+		if(board[i][j] == 1)
+		{
+			if(board[i][j+1] == 1  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 1 ){
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Quad 1
+	 * |1|0|
+	 * |0|0| 
+	 * @param board
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	private int validateQuad1(int[][] board, int i, int j)
+	{
+		if(board[i][j] == 1)
+		{
+			if(board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 0 ){
+				return 1;
+			}
+		}
+			
 		return 0;
 	}
 }
