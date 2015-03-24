@@ -157,16 +157,66 @@ public class EvaluatorTest extends TestCase
 				{0,0},
 				{0,0}
 		};
-		assertEquals(0, evaluator.validateQuad3(board, 0, 0, 1));
+		assertEquals(0, evaluator.validateQuad1(board, 0, 0, 1));
 	}
 	
 	public void testValidateQuad1002(){
 		Evaluator evaluator = new Evaluator();
 		
 		int[][] board = {
-				{0,0},
+				{1,0},
 				{0,0}
 		};
-		assertEquals(0, evaluator.validateQuad3(board, 0, 0, 1));
+		assertEquals(1, evaluator.validateQuad1(board, 0, 0, 1));
+	}
+	
+	public void testValidateQuad1003(){
+		Evaluator evaluator = new Evaluator();
+		
+		int[][] board = {
+				{0,1},
+				{0,0}
+		};
+		assertEquals(1, evaluator.validateQuad1(board, 0, 0, 1));
+	}
+	
+	public void testValidateQuad1004(){
+		Evaluator evaluator = new Evaluator();
+		
+		int[][] board = {
+				{0,0},
+				{1,0}
+		};
+		assertEquals(1, evaluator.validateQuad1(board, 0, 0, 1));
+	}
+	
+	public void testValidateQuad1005(){
+		Evaluator evaluator = new Evaluator();
+		
+		int[][] board = {
+				{0,0},
+				{0,1}
+		};
+		assertEquals(1, evaluator.validateQuad1(board, 0, 0, 1));
+	}
+	
+	public void testValidateQuad1006(){
+		Evaluator evaluator = new Evaluator();
+		
+		int[][] board = {
+				{1,0},
+				{0,1}
+		};
+		assertEquals(0, evaluator.validateQuad1(board, 0, 0, 1));
+	}
+	
+	public void testValidateQuad1007(){
+		Evaluator evaluator = new Evaluator();
+		
+		int[][] board = {
+				{1,1},
+				{1,1}
+		};
+		assertEquals(0, evaluator.validateQuad1(board, 0, 0, 1));
 	}
 }

@@ -168,13 +168,23 @@ public class Evaluator
 	 * @param color
 	 * @return
 	 */
-	private int validateQuad1(int[][] board, int i, int j, int color)
+	public int validateQuad1(int[][] board, int i, int j, int color)
 	{
-		if(board[i][j] == color)
-		{
-			if(board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 0 ){
-				return 1;
-			}
+		// haut gauche remplis
+		if(board[i][j] == color && board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 0 ){
+			return 1;
+		}
+		// haut droite remplis
+		if(board[i][j] == 0 && board[i][j+1] == color  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 0 ){
+			return 1;
+		}
+		// bas gauche remplis
+		if(board[i][j] == 0 && board[i][j+1] == 0  &&  board[i+1][j] == color  &&  board[i+1][j+1] == 0 ){
+			return 1;
+		}
+		// bas droite remplis
+		if(board[i][j] == 0 && board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == color ){
+			return 1;
 		}
 			
 		return 0;
