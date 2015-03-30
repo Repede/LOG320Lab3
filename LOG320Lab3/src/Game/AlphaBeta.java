@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 public class AlphaBeta
 {
 
-	public int alphabeta(MinMaxNode node,int alpha,int beta,boolean Player)
+	public float alphabeta(MinMaxNode node,float alpha,float beta,boolean Player)
 	{
 		if(node.getChildren().isEmpty())
 		{

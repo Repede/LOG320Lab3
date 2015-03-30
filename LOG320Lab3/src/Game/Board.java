@@ -43,6 +43,29 @@ public class Board
 	public Board updateBoard(Board gameBoard, String movement)
 	{
 		String[] movementToUpdate = new String[2];
+
+		int xDepart = Integer.parseInt(movement.substring(0, 1));
+		int yDepart = Integer.parseInt(movement.substring(1, 2));
+		movementToUpdate[0] = movement.substring(0, 2);
+		movementToUpdate[1] = movement.substring(2);
+
+		
+		// On va chercher l'indice de la couleur d'où provient le déplacement.
+		int movementColor = getBoardValue(xDepart, yDepart);
+		// On met la case vide à l'endroit d'où provient le déplacement.
+		gameBoard.setBoardValue(xDepart, yDepart, 0);
+
+		int xFin = Integer.parseInt(movementToUpdate[1].substring(0, 1));
+		int yFin = Integer.parseInt(movementToUpdate[1].substring(1, 2));
+		// On effectue met la couleur du déplacement effectué.
+		gameBoard.setBoardValue(xFin, yFin, movementColor);
+		
+		return gameBoard;
+	}
+	
+	public Board updateBoardWithLetters(Board gameBoard, String movement)
+	{
+		String[] movementToUpdate = new String[2];
 		int[] boardCoord1;
 		int[] boardCoord2;
 		

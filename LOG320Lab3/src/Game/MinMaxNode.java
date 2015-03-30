@@ -7,7 +7,7 @@ public class MinMaxNode
 {
 	private Board board;
 	private String move;
-	private int value;
+	private float value;
 	private Map<Integer,MinMaxNode> children = new HashMap<Integer,MinMaxNode>();
 	private MinMaxNode parent;
 	
@@ -29,11 +29,11 @@ public class MinMaxNode
 		this.move = move;
 	}
 	
-	public int getValue()
+	public float getValue()
 	{
 		return value;
 	}
-	public void setValue(int value)
+	public void setValue(float value)
 	{
 		this.value = value;
 	}

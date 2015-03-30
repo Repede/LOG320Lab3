@@ -12,7 +12,7 @@ public class Evaluator
 	/**
 	 *  https://i.imgflip.com/iwhub.jpg
 	 */
-	public Map<Integer,MinMaxNode> evaluateBestMoves(List<String> validPositions, Board rootBoard, int color)
+	public static Map<Integer,MinMaxNode> evaluateBestMoves(List<String> validPositions, Board rootBoard, int color)
 	{
 		Map<Integer,MinMaxNode> minMaxDictionary = new HashMap<Integer,MinMaxNode>();
 		//On garde une copie du rootBoard pour pouvoir �valuer plusieurs moves du root
@@ -26,7 +26,7 @@ public class Evaluator
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			node.setValue(this.calculateBoardWeight(referenceBoard.getBoard(), color));
+			node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
 			//On met la racine dans la liste
 			minMaxDictionary.put(i,node);
 			//On recr�� le board
@@ -42,9 +42,8 @@ public class Evaluator
 	 * @param rootBoard
 	 * @param color
 	 */
-	public void createParentsChildren(List<String> validPositions, MinMaxNode rootBoard, int color)
+	public static void createParentsChildren(List<String> validPositions, MinMaxNode rootBoard, int color)
 	{
-		Map<Integer,MinMaxNode> minMaxDictionary = new HashMap<Integer,MinMaxNode>();
 		//On garde une copie du rootBoard pour pouvoir �valuer plusieurs moves du root
 		Board referenceBoard = new Board(rootBoard.getBoard());
 		for(int i = 0 ; i < validPositions.size() ; ++i)
@@ -56,16 +55,25 @@ public class Evaluator
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			node.setValue(this.calculateBoardWeight(referenceBoard.getBoard(), color));
+			node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
 			node.setParent(rootBoard);
-			//On met la racine dans la liste
-			minMaxDictionary.put(i,node);
+			rootBoard.getChildren().put(i, node);
 			//On recr�� le board
 			referenceBoard = new Board(rootBoard.getBoard());
 		}
 	}
 	
-	private int calculateBoardWeight(int board[][], int color)
+//	https://pure.uvt.nl/portal/files/1216600/quad_ICCA_newsletter_vol_24_no_1.pdf
+//	Normal evaluator, 4 etapes
+//	on trouve le centre de masse pour les noirs
+//	on trouve le centre de masse pour les blancs
+//	on evalue la distance entre chaque piece noir vers le centre de masse noir (sumOfDistanceBlack)
+//	on evalue la distance entre chaque piece blanc vers le centre de masse blanc (sumOfDistanceWhite)
+	
+	
+	
+	
+	private static float calculateBoardWeight(int board[][], int color)
 	{
 		// basé sur http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.3549&rep=rep1&type=pdf
 		/*
@@ -74,9 +82,9 @@ public class Evaluator
 		 *  	- Pour l'instant, un quad est valide lorqu'un square possède seulement la même couleur.
 		 */
 		
-		int numberQuad1 = 0;
-		int numberQuad3 = 0;
-		int numberQuadd = 0;
+		float numberQuad1 = 0;
+		float numberQuad3 = 0;
+		float numberQuadd = 0;
 		
 		for(int i = 0 ; i < 7 ; i++)
 		{
@@ -105,7 +113,7 @@ public class Evaluator
 	 * @param color
 	 * @return
 	 */
-	public int validateQuadd(int[][] board, int i, int j, int color)
+	public static int validateQuadd(int[][] board, int i, int j, int color)
 	{
 		// premier cas
 		if(board[i][j] == color)
@@ -135,7 +143,7 @@ public class Evaluator
 	 * @param color
 	 * @return
 	 */
-	public int validateQuad3(int[][] board, int i, int j, int color)
+	public static int validateQuad3(int[][] board, int i, int j, int color)
 	{
 		
 		// bas gauche vide
@@ -168,7 +176,7 @@ public class Evaluator
 	 * @param color
 	 * @return
 	 */
-	public int validateQuad1(int[][] board, int i, int j, int color)
+	public static int validateQuad1(int[][] board, int i, int j, int color)
 	{
 		// haut gauche remplis
 		if(board[i][j] == color && board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == 0 ){
