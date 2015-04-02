@@ -1,5 +1,6 @@
 package Game;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,16 @@ public class Evaluator
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
+			
+			try
+			{
+				node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			//On met la racine dans la liste
 			minMaxDictionary.put(i,node);
 			//On recr�� le board
@@ -55,7 +65,16 @@ public class Evaluator
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
+			
+			try
+			{
+				node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			node.setParent(rootBoard);
 			rootBoard.getChildren().put(i, node);
 			//On recr�� le board
@@ -63,18 +82,131 @@ public class Evaluator
 		}
 	}
 	
-//	https://pure.uvt.nl/portal/files/1216600/quad_ICCA_newsletter_vol_24_no_1.pdf
-//	Normal evaluator, 4 etapes
-//	on trouve le centre de masse pour les noirs
-//	on trouve le centre de masse pour les blancs
-//	on evalue la distance entre chaque piece noir vers le centre de masse noir (sumOfDistanceBlack)
-//	on evalue la distance entre chaque piece blanc vers le centre de masse blanc (sumOfDistanceWhite)
+
 	
-	
-	
-	
-	private static float calculateBoardWeight(int board[][], int color)
+	private static float calculateBoardWeight(int board[][], int color) throws Exception
 	{
+		// --------------- NORMAL EVALUATOR --------------- 
+		// Utilise l'approche par centre de masse, basé sur https://pure.uvt.nl/portal/files/1216600/quad_ICCA_newsletter_vol_24_no_1.pdf
+		
+		// First, the centre of mass of the pieces on the board is computed for each side.
+		Point centerOfMassWhite = retrieveCenterOfMass(board, 2);
+		Point centerOfMassBlack = retrieveCenterOfMass(board, 4);
+		
+		// Second, we compute for each piece its distance to the centre of mass. 
+		//	- The distance is measured as the minimal number of squares the piece is removed from the centre of mass. 
+		//  - These distances are summed together, called the sum-of-distances. 
+		List<Float> distancesWithCenterWhite = retrieveSumOfDistances(board, 2, centerOfMassWhite);
+		List<Float> distancesWithCenterBlack = retrieveSumOfDistances(board, 4, centerOfMassBlack);
+		
+		// Third, the sum-of-minimaldistances is calculated. It is defined as the sum of the minimal distances of the pieces from the centre of mass.
+		//	- 	This computation is necessary since otherwise boards with a few pieces would be preferred. For instance, if we
+		//		have ten pieces, there will be always at least eight pieces at a distance of 1 from the centre of mass, and one
+		//		piece at a distance of 2. In this case the total sum of distances is minimal 10. Thus, the sum-of-minimaldistances
+		//		is subtracted from the sum-of-distances. 
+		List<Float> distancesWhite = retrieveCalculateDistance(distancesWithCenterWhite);
+		List<Float> distancesBlack = retrieveCalculateDistance(distancesWithCenterBlack);
+		
+		// Fourth, the average distance towards the centre of mass is calculated 
+		Float averageDistanceWhite = calculateAverageDistance(distancesWhite);
+		Float averageDistanceBlack = calculateAverageDistance(distancesBlack);
+		
+		// Fifth, the inverse of the average distance is defined as the concentration.
+		Float concentrationWhite = 1/averageDistanceWhite;
+		Float cencentrationBlack = 1/averageDistanceBlack;
+		
+		
+		// --------------- QUAD EVALUATOR --------------- 
+		Float quadEvaluatorValue = retrieveBoardEulerQuad(board, color);
+		
+		
+		// Valeur temporaire
+		return concentrationWhite + quadEvaluatorValue;
+	}
+	
+	
+	private static Float calculateAverageDistance(List<Float> distancesWhite)
+	{
+		Float averageDistance = (float) 0;
+		for(Float distance : distancesWhite){
+			averageDistance += distance;
+		}
+		averageDistance = averageDistance / distancesWhite.size();
+	
+		return averageDistance;
+	}
+
+	private static List<Float> retrieveCalculateDistance(List<Float> distancesWithCenter)
+	{
+		// Found the minimal value
+		Float minimalValue = Float.MAX_VALUE;
+		for(Float point : distancesWithCenter){
+			if(point < minimalValue){
+				minimalValue = point;
+			}				
+		}
+		
+		// Remove all the value not equal to the minimal value
+		int index = 0;
+		for(Float point : distancesWithCenter){
+			if(point != minimalValue){
+				distancesWithCenter.remove(index);
+			}
+			index ++;
+		}
+		
+		return distancesWithCenter;
+	}
+
+	private static List<Float> retrieveSumOfDistances(int[][] board, int color, Point center)
+	{
+		List<Float> distancesWithCenter = new ArrayList<Float>();
+		
+		for(int i = 0 ; i < 7 ; i++)
+		{
+			for(int j = 0 ; j < 7 ; j++)
+			{
+				if(board[i][j] == color){
+					float distance = (float) Math.abs(center.x - j) + Math.abs(center.y - i) ;
+					distancesWithCenter.add(distance);
+				}
+			}
+		}
+		
+		return distancesWithCenter;
+	}
+
+	private static Point retrieveCenterOfMass(int[][] board, int color) throws Exception
+	{
+		// Basé sur http://stackoverflow.com/questions/18591964/how-to-calculate-centroid-of-an-arraylist-of-points
+
+		Point center = new Point();
+		int pieceNumber = 0;
+		int centroidI = 0;
+		int centroidJ = 0;
+		
+		for(int i = 0 ; i < 7 ; i++)
+		{
+			for(int j = 0 ; j < 7 ; j++)
+			{
+				if(board[i][j] == color){
+					centroidI += i;
+					centroidJ += j;
+				}
+			}			
+		}
+		
+		if(pieceNumber == 0){
+			throw new Exception("Il n'y a plus de pion !!");
+		}
+		
+		center.x = centroidJ / pieceNumber;
+		center.y = centroidI / pieceNumber;
+		
+		return center;
+	}
+
+	private static float retrieveBoardEulerQuad(int board[][], int color){
 		// basé sur http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.3549&rep=rep1&type=pdf
 		/*
 		 *  Quelque questions:
@@ -102,7 +234,8 @@ public class Evaluator
 		// calculate Euler E = ( ∑Q1 −∑Q3 − 2 ∑Qd) / 4 
 		return (numberQuad1 - numberQuad3 - 2*numberQuadd) / 4;
 	}
-
+	
+	
 	/**
 	 * Quad d
 	 * |1|0|  et  |0|1|
