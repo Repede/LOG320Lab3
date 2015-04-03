@@ -120,14 +120,15 @@ public class Evaluator
 		Float quadEvaluatorValue = retrieveBoardEulerQuad(board, color);
 		
 		
-		// Valeur temporaire
+		// #TODO: Est-ce que l'on privilégie les boards dont les pieces sont plus proche du centre de masse avec un nombre de quad élevés?
+		
 		return concentrationWhite + quadEvaluatorValue;
 	}
 	
 	
 	private static Float calculateAverageDistance(List<Float> distancesWhite)
 	{
-		Float averageDistance = (float) 0;
+		Float averageDistance = (float) 0; 
 		for(Float distance : distancesWhite){
 			averageDistance += distance;
 		}
@@ -206,7 +207,7 @@ public class Evaluator
 		return center;
 	}
 
-	private static float retrieveBoardEulerQuad(int board[][], int color){
+	public static float retrieveBoardEulerQuad(int board[][], int color){
 		// basé sur http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.3549&rep=rep1&type=pdf
 		/*
 		 *  Quelque questions:
@@ -222,15 +223,47 @@ public class Evaluator
 		{
 			for(int j = 0 ; j < 7 ; j++)
 			{
-				// calcul de Q1
-				numberQuad1 += validateQuad1(board, i, j, color);
+				boolean indexIOdd = (i & 1) == 0;
+				boolean indexJOdd = (j & 1) == 0;
+				boolean pastIsNotQuad3AndD = (i==0 || j==0) || ((i != 0) && (j != 0) && validateQuad3(board, i-1, j-1, color) == 0);
+				boolean indexIJAresOdd = ( (indexIOdd && indexJOdd) || (i == 0 && j == 0));
+				
 				// calcul de Q3
-				numberQuad3 += validateQuad3(board, i, j, color);
+				if(validateQuad3(board, i, j, color) == 1 ){
+					numberQuad3 += 1;
+				}
 				// calcul de Qd
-				numberQuadd += validateQuadd(board, i, j, color);
+				else if (validateQuadd(board, i, j, color) == 1){  //&&  (indexIOdd && indexJOdd)
+					numberQuadd += 1;
+				}
+				// calcul de Q1
+				else if( pastIsNotQuad3AndD && indexIJAresOdd)
+				{
+					// FUCK THIS SHIT
+					// si ligne du bas validaate le fucking quad1
+					if((i == 6 || i ==0 ) && validateQuad1(board, i, j, color) ==1){
+						numberQuad1 +=1 ;
+					}
+					// FUCK THIS SHIT
+					// sinon vérifie les quad extérieur ...
+					else if(i>=1 && i<=5 && j>=1 && j<=5){
+						// Aucun pion ne doit appartenir à un quad3 ou un quadD
+						// FUCK THIS SHIT
+						if(validateQuad3(board, i+1, j, color) ==0
+								&& validateQuad3(board, i+1, j+1, color) ==0
+								&& validateQuad3(board, i, j+1, color) ==0
+								&& validateQuad3(board, i+1, j-1, color) ==0
+								&& validateQuadd(board, i+1, j, color) ==0
+								&& validateQuadd(board, i+1, j+1, color) ==0
+								&& validateQuad1(board, i, j, color) == 1){
+							numberQuad1 += 1;
+						}
+					}
+				}
 			}
 		}
 		
+		System.out.println("Quad 1: " + numberQuad1 + "  Quad 3: " + numberQuad3 + "  Quad d: " + numberQuadd);
 		// calculate Euler E = ( ∑Q1 −∑Q3 − 2 ∑Qd) / 4 
 		return (numberQuad1 - numberQuad3 - 2*numberQuadd) / 4;
 	}
@@ -248,19 +281,18 @@ public class Evaluator
 	 */
 	public static int validateQuadd(int[][] board, int i, int j, int color)
 	{
-		// premier cas
-		if(board[i][j] == color)
+		// |1|0|
+		// |0|1|
+		if(board[i][j] == color && board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == color)
 		{
-			if(board[i][j+1] == 0  &&  board[i+1][j] == 0  &&  board[i+1][j+1] == color ){
-				return 1;
-			}
+			return 1;
 		}
-		// deuxieme cas
-		else if(board[i][j] == 0)
+		
+		// |0|1|
+		// |1|0|
+		else if(board[i][j] == 0 && board[i][j+1] == color  &&  board[i+1][j] == color  &&  board[i+1][j+1] == 0 )
 		{
-			if(board[i][j+1] == color  &&  board[i+1][j] == color  &&  board[i+1][j+1] == 0 ){
-				return 1;
-			}	
+			return 1;
 		}
 	
 		return 0;

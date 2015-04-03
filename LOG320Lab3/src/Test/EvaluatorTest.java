@@ -6,17 +6,65 @@ import junit.framework.TestCase;
 public class EvaluatorTest extends TestCase
 {
 	// ------------------------
+	// TEST FOR RETRIEVE THE EULER QUAD VALUE
+	// ------------------------
+	
+	// Seulement 1 Q1
+	public void testRetrieveBoardEulerQuad001(){
+		int[][] board = {
+				{0,0,0,0,0,0,0,2},
+				{0,0,2,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{4,0,0,0,0,0,0,0}
+		};
+		
+		assertEquals((float)0.50, Evaluator.retrieveBoardEulerQuad(board, 2));		
+	}
+	
+	public void testRetrieveBoardEulerQuad002(){
+		int[][] board = {
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,2,0},
+				{0,2,2,0,0,2,0,0},
+				{0,0,2,0,2,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,2,0,0,0,0},
+				{4,0,0,0,0,0,0,0}
+		};
+		
+		assertEquals((float)-0.75, Evaluator.retrieveBoardEulerQuad(board, 2));		
+	}
+	
+	public void testRetrieveBoardEulerQuad003(){
+		int[][] board = {
+				{0,0,0,0,0,0,0,0},
+				{0,2,2,0,0,0,0,0},
+				{0,0,2,0,0,0,2,0},
+				{0,2,2,0,0,2,0,0},
+				{0,0,2,0,2,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,2,0,0,0,0},
+				{4,0,0,0,0,0,0,0}
+		};
+		
+		assertEquals((float)-0.75, Evaluator.retrieveBoardEulerQuad(board, 2));		
+	}
+	
+	// ------------------------
 	// TEST FOR VALIDATE QUAD D
 	// ------------------------
 	
-	public void testValidateQuadd001(){
-		Evaluator evaluator = new Evaluator();
-		
+	public void testValidateQuadd001(){		
 		int[][] board = {
 				{0,0},
 				{0,0}
 		};
-		assertEquals(0, evaluator.validateQuadd(board, 0, 0, 1));
+		assertEquals(0, Evaluator.validateQuadd(board, 0, 0, 1));
 	}
 	
 	public void testValidateQuadd002(){
@@ -57,6 +105,16 @@ public class EvaluatorTest extends TestCase
 				{1,0}
 		};
 		assertEquals(1, evaluator.validateQuadd(board, 0, 0, 1));
+	}
+	
+	public void testValidateQuadd006(){
+		Evaluator evaluator = new Evaluator();
+		
+		int[][] board = {
+				{0,1},
+				{0,1}
+		};
+		assertEquals(0, evaluator.validateQuadd(board, 0, 0, 1));
 	}
 	
 	
