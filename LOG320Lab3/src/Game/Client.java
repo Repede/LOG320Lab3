@@ -8,6 +8,7 @@ class Client
 	public static void main(String[] args)
 	{
 		GameRules gameRules = new GameRules();
+		AIMechanics aiMech=new AIMechanics();
 		Evaluator evaluator = new Evaluator();
 		Board gameBoard = new Board();
 		Board previousValidBoard = new Board();
@@ -55,15 +56,15 @@ class Client
 					previousValidBoard = gameBoard;
 					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");				
 					
-					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					/*String move = gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves(validPositions));
-					System.out.println(move);
-					
+					//List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard()or)
+							//gameBoard.boardIndexToLetter(evaluator.evalua, currentColor);
+					String move =aiMech.getBestMove(gameBoard, currentColor);
+					System.out.println(move);		
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
-					output.flush();*/
+					output.flush();
 				}
 				// Début de la partie en joueur Noir
 				if (cmd == '2')

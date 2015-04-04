@@ -1,6 +1,7 @@
 package Game;
 
 import java.awt.Point;
+import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +27,7 @@ public class Evaluator
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
-			node.setMove(validPositions.get(i));
-			
+			node.setMove(validPositions.get(i));	
 			try
 			{
 				node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
@@ -52,9 +52,10 @@ public class Evaluator
 	 * @param rootBoard
 	 * @param color
 	 */
-	public static void createParentsChildren(List<String> validPositions, MinMaxNode rootBoard, int color)
+	public static void createParentsChildren(List<String> validPositions, MinMaxNode rootBoard, int color, long time)
 	{
 		//On garde une copie du rootBoard pour pouvoir �valuer plusieurs moves du root
+		GameRules gr = new GameRules();
 		Board referenceBoard = new Board(rootBoard.getBoard());
 		for(int i = 0 ; i < validPositions.size() ; ++i)
 		{
@@ -65,7 +66,6 @@ public class Evaluator
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			
 			try
 			{
 				node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
@@ -74,11 +74,18 @@ public class Evaluator
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 			node.setParent(rootBoard);
 			rootBoard.getChildren().put(i, node);
 			//On recr�� le board
-			referenceBoard = new Board(rootBoard.getBoard());
+			referenceBoard = new Board(rootBoard.getBoard());	
+			if(System.currentTimeMillis()-time>4000)
+			  return;
+		}
+		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet())
+		{			
+			int newColor=(color==GameRules.WHITE_PAWN)?GameRules.BLACK_PAWN:GameRules.WHITE_PAWN;
+			List<String> moves = gr.generateMoves(child.getValue().getBoard().getBoard(), newColor);	
+			createParentsChildren(moves,child.getValue(),color,time);
 		}
 	}
 	
@@ -88,7 +95,7 @@ public class Evaluator
 	{
 		// --------------- NORMAL EVALUATOR --------------- 
 		// Utilise l'approche par centre de masse, basé sur https://pure.uvt.nl/portal/files/1216600/quad_ICCA_newsletter_vol_24_no_1.pdf
-		
+	/*	
 		// First, the centre of mass of the pieces on the board is computed for each side.
 		Point centerOfMassWhite = retrieveCenterOfMass(board, 2);
 		Point centerOfMassBlack = retrieveCenterOfMass(board, 4);
@@ -113,7 +120,33 @@ public class Evaluator
 		
 		// Fifth, the inverse of the average distance is defined as the concentration.
 		Float concentrationWhite = 1/averageDistanceWhite;
-		Float cencentrationBlack = 1/averageDistanceBlack;
+		Float cencentrationBlack = 1/averageDistanceBlack;*/
+		
+/////////////////////////////////////////////////////////For each Color////////////////////////////////////////////////		
+		Point centerOfMassWhite = retrieveCenterOfMass(board,color);
+		//Point centerOfMassBlack = retrieveCenterOfMass(board, 4);
+		
+		// Second, we compute for each piece its distance to the centre of mass. 
+		//	- The distance is measured as the minimal number of squares the piece is removed from the centre of mass. 
+		//  - These distances are summed together, called the sum-of-distances. 
+		List<Float> distancesWithCenterWhite = retrieveSumOfDistances(board, color, centerOfMassWhite);
+		//List<Float> distancesWithCenterBlack = retrieveSumOfDistances(board, 4, centerOfMassBlack);
+		
+		// Third, the sum-of-minimaldistances is calculated. It is defined as the sum of the minimal distances of the pieces from the centre of mass.
+		//	- 	This computation is necessary since otherwise boards with a few pieces would be preferred. For instance, if we
+		//		have ten pieces, there will be always at least eight pieces at a distance of 1 from the centre of mass, and one
+		//		piece at a distance of 2. In this case the total sum of distances is minimal 10. Thus, the sum-of-minimaldistances
+		//		is subtracted from the sum-of-distances. 
+		List<Float> distancesWhite = retrieveCalculateDistance(distancesWithCenterWhite);
+	//	List<Float> distancesBlack = retrieveCalculateDistance(distancesWithCenterBlack);
+		
+		// Fourth, the average distance towards the centre of mass is calculated 
+		Float averageDistanceWhite = calculateAverageDistance(distancesWhite);
+		//Float averageDistanceBlack = calculateAverageDistance(distancesBlack);
+		
+		// Fifth, the inverse of the average distance is defined as the concentration.
+		Float concentrationWhite = 1/averageDistanceWhite;
+	//	Float cencentrationBlack = 1/averageDistanceBlack;
 		
 		
 		// --------------- QUAD EVALUATOR --------------- 
@@ -128,7 +161,7 @@ public class Evaluator
 	
 	private static Float calculateAverageDistance(List<Float> distancesWhite)
 	{
-		Float averageDistance = (float) 0; 
+		Float averageDistance =  0F; 
 		for(Float distance : distancesWhite){
 			averageDistance += distance;
 		}
@@ -173,7 +206,6 @@ public class Evaluator
 				}
 			}
 		}
-		
 		return distancesWithCenter;
 	}
 
@@ -185,6 +217,10 @@ public class Evaluator
 		int pieceNumber = 0;
 		int centroidI = 0;
 		int centroidJ = 0;
+		for (int i = 0; i < board.length; i++)
+			for (int j = 0; j < board.length; j++)
+				if(board[i][j]==color)
+					pieceNumber++;
 		
 		for(int i = 0 ; i < 7 ; i++)
 		{
@@ -200,10 +236,8 @@ public class Evaluator
 		if(pieceNumber == 0){
 			throw new Exception("Il n'y a plus de pion !!");
 		}
-		
 		center.x = centroidJ / pieceNumber;
 		center.y = centroidI / pieceNumber;
-		
 		return center;
 	}
 
