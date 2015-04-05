@@ -63,6 +63,9 @@ public class Evaluator
 			//On Prï¿½pare une racine
 			MinMaxNode node = new MinMaxNode();
 			//2 Transformer les validPositions en board (on fait le move dans referenceBoard selon la couleur)
+			
+			//Ici le referenceBoard est comme lié à notre gameBoard situé dans le client.
+			//Ce updateBoard là, update le gameBoard et c'est ça qui fuck l'affichage.
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));

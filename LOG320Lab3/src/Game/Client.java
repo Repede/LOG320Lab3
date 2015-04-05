@@ -54,15 +54,20 @@ class Client
 
 					gameBoard.displayBoard();
 					previousValidBoard = gameBoard;
+					
+					//Mettre le break point ici (sur le sysout) pour être capable de débugger comme il le faut. Faire "step-over" sur le getBestMove
 					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");				
 					
 					//List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard()or)
-							//gameBoard.boardIndexToLetter(evaluator.evalua, currentColor);
-					String move =aiMech.getBestMove(gameBoard, currentColor);
-					String outputToServer=gameBoard.boardIndexToLetter(move);	
-					//gameBoard.updateBoard(gameBoard, outputToServer);
+					//gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves, currentColor);
 					
-					System.out.println(outputToServer);		
+					// Le getBestMove change complètement le format de notre gameBoard, donc l'affichage fuck après ça.
+					// La méthode createParentChildren fait en sorte que notre referenceBoard est updaté (appel de updateBoard), quand referenceBoard est modifié, notre gameBoard est modifié aussi.
+					// Donc il essaie de display un board où le move a déjà été updater...
+					// Voir commentaires dans la méthode createParentChildren.
+					String move = aiMech.getBestMove(gameBoard, currentColor);
+					String outputToServer = gameBoard.boardIndexToLetter(move);	
+					
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
@@ -114,13 +119,12 @@ class Client
 					System.out.print("Dernier coup : " + s);
 					System.out.print("\nEntrez votre coup : ");
 					
-					String move =aiMech.getBestMove(gameBoard, currentColor);
-					String outputToServer=gameBoard.boardIndexToLetter(move);	
-					gameBoard.updateBoard(gameBoard, move);
+					//String move =aiMech.getBestMove(gameBoard, currentColor);
+					//String outputToServer=gameBoard.boardIndexToLetter(move);	
+					//gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
-					output.write(outputToServer.getBytes(), 0, outputToServer.length());
-					System.out.println("Guillaume MASSISSI");
+					//output.write(outputToServer.getBytes(), 0, outputToServer.length());
 					output.flush();
 				}
 				// Le dernier coup est invalide
