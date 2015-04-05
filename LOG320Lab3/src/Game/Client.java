@@ -66,7 +66,7 @@ class Client
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
-					output.write(outputToServer.getBytes(), 0, move.length());
+					output.write(outputToServer.getBytes(), 0, outputToServer.length());
 					output.flush();
 				}
 				// Début de la partie en joueur Noir
