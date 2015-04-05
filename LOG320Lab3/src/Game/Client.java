@@ -119,12 +119,12 @@ class Client
 					System.out.print("Dernier coup : " + s);
 					System.out.print("\nEntrez votre coup : ");
 					
-					//String move =aiMech.getBestMove(gameBoard, currentColor);
-					//String outputToServer=gameBoard.boardIndexToLetter(move);	
-					//gameBoard.updateBoard(gameBoard, move);
+					String move = aiMech.getBestMove(gameBoard, currentColor);
+					String outputToServer = gameBoard.boardIndexToLetter(move);	
+					gameBoard.updateBoardWithLetters(gameBoard, outputToServer);
 					System.out.print("\n");
 					gameBoard.displayBoard();
-					//output.write(outputToServer.getBytes(), 0, outputToServer.length());
+					output.write(outputToServer.getBytes(), 0, outputToServer.length());
 					output.flush();
 				}
 				// Le dernier coup est invalide
@@ -133,7 +133,7 @@ class Client
 					gameBoard = previousValidBoard;
 					System.out.print("Coup invalide, entrez un nouveau coup : ");
 
-					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
+					//List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
 					/*String move = gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves(validPositions));
 
 					System.out.println("Move: " + move);
@@ -141,6 +141,14 @@ class Client
 					gameBoard.displayBoard();
 					output.write(move.getBytes(), 0, move.length());
 					output.flush();*/
+					
+					String move = aiMech.getBestMove(gameBoard, currentColor);
+					String outputToServer = gameBoard.boardIndexToLetter(move);	
+					gameBoard.updateBoardWithLetters(gameBoard, outputToServer);
+					System.out.print("\n");
+					gameBoard.displayBoard();
+					output.write(outputToServer.getBytes(), 0, outputToServer.length());
+					output.flush();
 
 				}
 			}
