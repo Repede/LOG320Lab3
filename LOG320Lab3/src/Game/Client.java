@@ -120,6 +120,7 @@ class Client
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					output.write(outputToServer.getBytes(), 0, outputToServer.length());
+					System.out.println("Guillaume MASSISSI");
 					output.flush();
 				}
 				// Le dernier coup est invalide
