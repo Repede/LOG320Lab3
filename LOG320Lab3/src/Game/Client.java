@@ -53,22 +53,22 @@ class Client
 					}
 
 					gameBoard.displayBoard();
-					previousValidBoard = gameBoard;
+					//previousValidBoard = gameBoard;
 					
-					//Mettre le break point ici (sur le sysout) pour être capable de débugger comme il le faut. Faire "step-over" sur le getBestMove
+					//Mettre le break point ici (sur le sysout) pour ï¿½tre capable de dï¿½bugger comme il le faut. Faire "step-over" sur le getBestMove
 					System.out.print("Nouvelle partie! Vous jouer blanc, entrez votre premier coup : ");				
 					
 					//List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard()or)
 					//gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves, currentColor);
 					
-					// Le getBestMove change complètement le format de notre gameBoard, donc l'affichage fuck après ça.
-					// La méthode createParentChildren fait en sorte que notre referenceBoard est updaté (appel de updateBoard), quand referenceBoard est modifié, notre gameBoard est modifié aussi.
-					// Donc il essaie de display un board où le move a déjà été updater...
-					// Voir commentaires dans la méthode createParentChildren.
-					String move = aiMech.getBestMove(gameBoard, currentColor);
+					// Le getBestMove change complï¿½tement le format de notre gameBoard, donc l'affichage fuck aprï¿½s ï¿½a.
+					// La mï¿½thode createParentChildren fait en sorte que notre referenceBoard est updatï¿½ (appel de updateBoard), quand referenceBoard est modifiï¿½, notre gameBoard est modifiï¿½ aussi.
+					// Donc il essaie de display un board oï¿½ le move a dï¿½jï¿½ ï¿½tï¿½ updater...
+					// Voir commentaires dans la mï¿½thode createParentChildren.
+					String move = aiMech.getBestMove(gameBoard , currentColor);
 					String outputToServer = gameBoard.boardIndexToLetter(move);	
 					
-					gameBoard.updateBoard(gameBoard, move);
+					gameBoard.updateBoardWithLetters(gameBoard,outputToServer);
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					output.write(outputToServer.getBytes(), 0, outputToServer.length());
@@ -98,7 +98,7 @@ class Client
 							y++;
 						}
 					}
-					previousValidBoard = gameBoard;
+					//previousValidBoard = gameBoard;
 				}
 
 				// Le serveur demande le prochain coup
@@ -115,7 +115,7 @@ class Client
 					gameBoard.updateBoardWithLetters(gameBoard, s);
 					System.out.print("\n");
 					gameBoard.displayBoard();
-					previousValidBoard = gameBoard;
+					//previousValidBoard = gameBoard;
 					System.out.print("Dernier coup : " + s);
 					System.out.print("\nEntrez votre coup : ");
 					

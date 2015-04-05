@@ -14,10 +14,11 @@ public class AIMechanics
 		float maxAlphaBeta=-100F;
 		AlphaBeta ab=new AlphaBeta();
 		MinMaxNode rootBoard = new MinMaxNode();
-		rootBoard.setBoard(currentBoard);
+		Board copyOfCurrentBoard=new Board(currentBoard);
+		rootBoard.setBoard(copyOfCurrentBoard);
 		
 		GameRules gr = new GameRules();
-		List<String> moves = gr.generateMoves(currentBoard.getBoard(), myColor);
+		List<String> moves = gr.generateMoves(copyOfCurrentBoard.getBoard(), myColor);
 		//Créé les enfants (devrait être récursif
 		Evaluator.createParentsChildren(moves, rootBoard, myColor,initTime);
 		//List<Float> resultAlphaBeta=new ArrayList<Float>();

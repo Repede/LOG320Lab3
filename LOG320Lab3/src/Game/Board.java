@@ -3,7 +3,6 @@ package Game;
 public class Board
 {
 	private int[][] board = new int[8][8];
-	
 	public Board(Board nBoard)
 	{
 		this.setBoard(nBoard.getBoard());
@@ -81,9 +80,9 @@ public class Board
 		
 		boardCoord1 = letterToBoardIndex(movementToUpdate[0]);
 		// On va chercher l'indice de la couleur d'où provient le déplacement.
-		int movementColor = getBoardValue(boardCoord1[0], boardCoord1[1]);
+		int  movementColor = getBoardValue(boardCoord1[0], boardCoord1[1]);
 		// On met la case vide à l'endroit d'où provient le déplacement.
-		gameBoard.setBoardValue(boardCoord1[0], boardCoord1[1], 0);
+		gameBoard.setBoardValue( boardCoord1[0],boardCoord1[1], 0);
 		
 		boardCoord2 = letterToBoardIndex(movementToUpdate[1]);
 		// On effectue met la couleur du déplacement effectué.
@@ -186,12 +185,16 @@ public class Board
 	
 	public int[][] getBoard()
 	{
-		return board;
+		return board.clone();
 	}
 	
 	public void setBoard(int[][] board)
 	{
-		this.board = board.clone();
+		int[][] tempTab=new int[8][8];
+		for (int i = 0; i < tempTab.length; i++)
+			for (int j = 0; j < tempTab.length; j++)
+				tempTab[i][j]=board[i][j];
+		this.board = tempTab;
 	}
 	
 	public int getBoardValue(int x, int y)
