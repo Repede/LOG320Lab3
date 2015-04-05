@@ -79,7 +79,7 @@ public class Evaluator
 			rootBoard.getChildren().put(i, node);
 			//On recr�� le board
 			referenceBoard = new Board(rootBoard.getBoard());	
-			System.out.println(System.currentTimeMillis()-time);
+			//System.out.println(System.currentTimeMillis()-time);
 			if(System.currentTimeMillis()-time>1000)
 			  return;
 		}

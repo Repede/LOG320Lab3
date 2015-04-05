@@ -106,7 +106,8 @@ class Client
 					// System.out.println("size " + size);
 					input.read(aBuffer, 0, size);
 					String s = new String(aBuffer);
-					gameBoard.updateBoard(gameBoard, s);
+					
+					gameBoard.updateBoardWithLetters(gameBoard, s);
 					System.out.print("\n");
 					gameBoard.displayBoard();
 					previousValidBoard = gameBoard;
@@ -115,10 +116,10 @@ class Client
 					
 					String move =aiMech.getBestMove(gameBoard, currentColor);
 					String outputToServer=gameBoard.boardIndexToLetter(move);	
-					gameBoard.updateBoard(gameBoard, outputToServer);
+					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
-					output.write(outputToServer.getBytes(), 0, move.length());
+					output.write(outputToServer.getBytes(), 0, outputToServer.length());
 					output.flush();
 				}
 				// Le dernier coup est invalide
