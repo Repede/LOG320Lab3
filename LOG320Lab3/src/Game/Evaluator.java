@@ -1,6 +1,7 @@
 package Game;
 
 import java.awt.Point;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +79,8 @@ public class Evaluator
 			rootBoard.getChildren().put(i, node);
 			//On recr�� le board
 			referenceBoard = new Board(rootBoard.getBoard());	
-			if(System.currentTimeMillis()-time>4000)
+			System.out.println(System.currentTimeMillis()-time);
+			if(System.currentTimeMillis()-time>1000)
 			  return;
 		}
 		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet())
@@ -180,15 +182,15 @@ public class Evaluator
 			}				
 		}
 		
-		// Remove all the value not equal to the minimal value
-		int index = 0;
-		for(Float point : distancesWithCenter){
-			if(point != minimalValue){
-				distancesWithCenter.remove(index);
+		// Remove all the value not equal to the minimal value	
+		Iterator<Float> i = distancesWithCenter.iterator();
+		while (i.hasNext()) 
+		{
+			Float s = i.next();
+			if(s != minimalValue){
+				i.remove();
 			}
-			index ++;
 		}
-		
 		return distancesWithCenter;
 	}
 
@@ -297,7 +299,7 @@ public class Evaluator
 			}
 		}
 		
-		System.out.println("Quad 1: " + numberQuad1 + "  Quad 3: " + numberQuad3 + "  Quad d: " + numberQuadd);
+		//System.out.println("Quad 1: " + numberQuad1 + "  Quad 3: " + numberQuad3 + "  Quad d: " + numberQuadd);
 		// calculate Euler E = ( ∑Q1 −∑Q3 − 2 ∑Qd) / 4 
 		return (numberQuad1 - numberQuad3 - 2*numberQuadd) / 4;
 	}

@@ -59,11 +59,14 @@ class Client
 					//List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard()or)
 							//gameBoard.boardIndexToLetter(evaluator.evalua, currentColor);
 					String move =aiMech.getBestMove(gameBoard, currentColor);
-					System.out.println(move);		
+					String outputToServer=gameBoard.boardIndexToLetter(move);	
+					//gameBoard.updateBoard(gameBoard, outputToServer);
+					
+					System.out.println(outputToServer);		
 					gameBoard.updateBoard(gameBoard, move);
 					System.out.print("\n");
 					gameBoard.displayBoard();
-					output.write(move.getBytes(), 0, move.length());
+					output.write(outputToServer.getBytes(), 0, move.length());
 					output.flush();
 				}
 				// Début de la partie en joueur Noir
@@ -110,16 +113,13 @@ class Client
 					System.out.print("Dernier coup : " + s);
 					System.out.print("\nEntrez votre coup : ");
 					
-					List<String> validPositions = gameRules.generateMoves(gameBoard.getBoard(), currentColor);
-					/*String move = gameBoard.boardIndexToLetter(evaluator.evaluateBestMoves(validPositions));
-					System.out.println(move);
-					
-					gameBoard.updateBoard(gameBoard, move);
+					String move =aiMech.getBestMove(gameBoard, currentColor);
+					String outputToServer=gameBoard.boardIndexToLetter(move);	
+					gameBoard.updateBoard(gameBoard, outputToServer);
 					System.out.print("\n");
 					gameBoard.displayBoard();
-					output.write(move.getBytes(), 0, move.length());
-					output.flush();*/
-
+					output.write(outputToServer.getBytes(), 0, move.length());
+					output.flush();
 				}
 				// Le dernier coup est invalide
 				if (cmd == '4')
