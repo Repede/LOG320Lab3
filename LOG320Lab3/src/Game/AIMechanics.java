@@ -66,7 +66,7 @@ public class AIMechanics
 		
 		//Pour chaque enfant de la racine, on lance l'alpha beta qui trouvera le meilleur coup a jouer
 		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet()) {
-			float tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, false);
+			float tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, true);
 			
 			if(tempAlphaBeta > maxAlphaBeta) {
 				bestMove = child.getValue();
