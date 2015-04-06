@@ -55,42 +55,56 @@ public class Evaluator
 	 */
 	public static void createParentsChildren(List<String> validPositions, MinMaxNode rootBoard, int color, long time)
 	{
-		//On garde une copie du rootBoard pour pouvoir ï¿½valuer plusieurs moves du root
 		GameRules gr = new GameRules();
+		//On garde une copie du rootBoard pour pouvoir evaluer tous les coups possibles à partir de la racine.
 		Board referenceBoard = new Board(rootBoard.getBoard());
-		for(int i = 0 ; i < validPositions.size() ; ++i)
-		{
-			//On Prï¿½pare une racine
-			MinMaxNode node = new MinMaxNode();
-			//2 Transformer les validPositions en board (on fait le move dans referenceBoard selon la couleur)
+		
+		//Pour chacun des coups valide, on cree un node enfant avec les informations contenant ce coup joue, puis assigne le rootBoard comme parent.
+		for(int i = 0; i < validPositions.size(); ++i) {
 			
-			//Ici le referenceBoard est comme lié à notre gameBoard situé dans le client.
-			//Ce updateBoard là, update le gameBoard et c'est ça qui fuck l'affichage.
+			//On utilise un node pour enregistrer les informations d'un coup. Le coup deviendra une racine pour d'autre possibilites de coups.
+			MinMaxNode node = new MinMaxNode();
+			
+			//On joue le coup sur le board de référence pour que le node conserve un board ayant le coup joue.
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
-			//On ajoute le board, le move et le poid du board dans la racine
+			
+			//On enregistre l'etat du board, le coup valide ainsi que le poid du board dans le node.
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			try
-			{
+			try {
 				node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
-			} catch (Exception e)
-			{
-				// TODO Auto-generated catch block
+			} catch (Exception e){
 				e.printStackTrace();
 			}
+			
+			//On enregistre le rootBoard en tant que parent au node.
 			node.setParent(rootBoard);
+			
+			//On ajoute le node du coup valide en tant qu'enfant du rootBoard
 			rootBoard.getChildren().put(i, node);
-			//On recrï¿½ï¿½ le board
-			referenceBoard = new Board(rootBoard.getBoard());	
-			//System.out.println(System.currentTimeMillis()-time);
-			if(System.currentTimeMillis()-time>1000)
+			
+			//On remet le board de reference tel qu'il etait au départ.
+			referenceBoard = new Board(rootBoard.getBoard());
+			
+			//On s'assure qu'on dépasse pas le temps permis à la récursivité de la fonction.
+			if(System.currentTimeMillis()-time>1000) {
+				
 			  return;
+			
+			}
 		}
-		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet())
-		{			
-			int newColor=(color==GameRules.WHITE_PAWN)?GameRules.BLACK_PAWN:GameRules.WHITE_PAWN;
+		
+		//Pour chacun des enfants de la racine, on lance leur processus de création des enfants. Ainsi l'arbre sera rempli avec les references.
+		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet()) {			
+			
+			//Pour chaque étage de l'arbre on doit changer la couleur des nodes crées. Les coups de notre couleur sont des choix MAX, les coups de l'adversaire sont des choix MIN
+			int newColor = (color == GameRules.WHITE_PAWN) ? GameRules.BLACK_PAWN : GameRules.WHITE_PAWN;
+			
+			//On genere tout les coups possible de l'enfant
 			List<String> moves = gr.generateMoves(child.getValue().getBoard().getBoard(), newColor);	
-			createParentsChildren(moves,child.getValue(),color,time);
+			
+			//L'enfant en question devient à son tour un parent, on cree ses enfants.
+			createParentsChildren(moves, child.getValue(), color, time);
 		}
 	}
 	

@@ -7,32 +7,40 @@ import java.util.Map.Entry;
 
 public class AIMechanics
 {
+	//On cherche le meilleur coup possible a jouer considerant le board actuel et quel couleur on joue
 	public String getBestMove(Board currentBoard, int myColor)
 	{
-		long initTime=System.currentTimeMillis();
-		MinMaxNode bestMove=null;
-		float maxAlphaBeta=-100F;
-		AlphaBeta ab=new AlphaBeta();
+		//On garde en memoire le temps du lancement de la recherche du meilleur mouvement.
+		long initTime = System.currentTimeMillis();
+		
+		//Notre meilleur coup possible est un node parmi l'arbre
+		MinMaxNode bestMove = null;
+		
+		float maxAlphaBeta =- 100F;
+		AlphaBeta ab = new AlphaBeta();
+		
+		//On initialise le node parent on lui met en mémoire l'etat du board actuel
 		MinMaxNode rootBoard = new MinMaxNode();
-		Board copyOfCurrentBoard=new Board(currentBoard);
+		Board copyOfCurrentBoard = new Board(currentBoard);
 		rootBoard.setBoard(copyOfCurrentBoard);
 		
 		GameRules gr = new GameRules();
+		//On genere les meilleur coups possible a jouer
 		List<String> moves = gr.generateMoves(copyOfCurrentBoard.getBoard(), myColor);
-		//Créé les enfants (devrait être récursif
-		Evaluator.createParentsChildren(moves, rootBoard, myColor,initTime);
-		//List<Float> resultAlphaBeta=new ArrayList<Float>();
-		for(Entry<Integer,MinMaxNode> child: rootBoard.getChildren().entrySet())
-		{
-			float tempAphBet=ab.alphabeta(child.getValue(), -100, 100, true);
-			if(tempAphBet>maxAlphaBeta)
-				bestMove=child.getValue();
-			//  resultAlphaBeta.add(ab.alphabeta(child.getValue(), -100, 100, true));
+		
+		//On cree les enfants de la racine
+		Evaluator.createParentsChildren(moves, rootBoard, myColor, initTime);
+		
+		//Pour chaque enfant de la racine, on lance l'alpha beta qui trouvera le meilleur coup a jouer
+		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet()) {
+			float tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, true);
+			
+			if(tempAlphaBeta > maxAlphaBeta) {
+				bestMove = child.getValue();
+			}
 		}
-		//for(Float e: resultAlphaBeta)
-	//		System.out.println(e);
-		//finalIndex=Collections.max(resultAlphaBeta)
-		System.out.println( bestMove.getMove());
+
+		//On retourne l'information du node ayant le meilleur coup a jouer
 		return bestMove.getMove();
 	}
 }
