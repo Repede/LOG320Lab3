@@ -31,9 +31,42 @@ public class AIMechanics
 		//On cree les enfants de la racine
 		Evaluator.createParentsChildren(moves, rootBoard, myColor, initTime);
 		
+		//System.out.println(System.currentTimeMillis() - initTime);
+		
+		//Pour chaque étage de l'arbre on doit changer la couleur des nodes crées. Les coups de notre couleur sont des choix MAX, les coups de l'adversaire sont des choix MIN
+		int newColor = (myColor == GameRules.WHITE_PAWN) ? GameRules.BLACK_PAWN : GameRules.WHITE_PAWN;
+		MinMaxNode premierNode = rootBoard.getChildren().get(0);
+		
+		//Tant que le temps nous le permet, on parcoure en largeur les enfants de la profondeur actuelle et on leur cree des enfants a leur tour
+		while (System.currentTimeMillis() - initTime < 4000) {
+			MinMaxNode currentNode = premierNode;
+			boolean finDeLaProfondeur = false;
+			
+			while (!finDeLaProfondeur) {	
+				
+				//On genere tout les coups possible de l'enfant
+				List<String> movesNewColor = gr.generateMoves(currentNode.getBoard().getBoard(), newColor);	
+				
+				//L'nfant en question devient à son tour un parent, on cree ses enfants.
+				Evaluator.createParentsChildren(movesNewColor, currentNode, newColor, initTime);
+				
+				if(currentNode.getNextNode() == null) {
+					finDeLaProfondeur = true;
+				} else {
+					currentNode = currentNode.getNextNode();
+				}
+				
+				if(System.currentTimeMillis()-initTime > 4000) {
+					break;
+				}
+			}
+			newColor = (newColor == GameRules.BLACK_PAWN) ? GameRules.WHITE_PAWN : GameRules.BLACK_PAWN;
+			premierNode = premierNode.getChildren().get(0);
+		}
+		
 		//Pour chaque enfant de la racine, on lance l'alpha beta qui trouvera le meilleur coup a jouer
 		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet()) {
-			float tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, true);
+			float tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, false);
 			
 			if(tempAlphaBeta > maxAlphaBeta) {
 				bestMove = child.getValue();

@@ -10,6 +10,8 @@ public class MinMaxNode
 	private float value;
 	private Map<Integer,MinMaxNode> children = new HashMap<Integer,MinMaxNode>();
 	private MinMaxNode parent;
+	private MinMaxNode previousNode;
+	private MinMaxNode nextNode;
 	
 	public Board getBoard()
 	{
@@ -54,5 +56,25 @@ public class MinMaxNode
 	public void setParent(MinMaxNode parent)
 	{
 		this.parent = parent;
+	}
+	
+	public MinMaxNode getNextNode()
+	{
+		return nextNode;
+	}
+	
+	public void setNextNode(MinMaxNode nextNode)
+	{
+		this.nextNode = nextNode;
+	}
+	
+	public MinMaxNode getPreviousNode()
+	{
+		return previousNode;
+	}
+	
+	public void setPreviousNode(MinMaxNode previousNode)
+	{
+		this.previousNode = previousNode;
 	}
 }

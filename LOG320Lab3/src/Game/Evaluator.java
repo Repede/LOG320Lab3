@@ -65,6 +65,15 @@ public class Evaluator
 			//On utilise un node pour enregistrer les informations d'un coup. Le coup deviendra une racine pour d'autre possibilites de coups.
 			MinMaxNode node = new MinMaxNode();
 			
+			if (i > 0) {
+				rootBoard.getChildren().get(i-1).setNextNode(node);
+				node.setPreviousNode(rootBoard.getChildren().get(i-1));
+			} else if(rootBoard.getPreviousNode() != null) {
+				int dernierNodeDuPreviousNode = rootBoard.getPreviousNode().getChildren().size() - 1;
+				rootBoard.getPreviousNode().getChildren().get(dernierNodeDuPreviousNode).setNextNode(node);
+				node.setPreviousNode(rootBoard.getPreviousNode().getChildren().get(dernierNodeDuPreviousNode));
+			}
+			
 			//On joue le coup sur le board de référence pour que le node conserve un board ayant le coup joue.
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
 			
@@ -87,24 +96,11 @@ public class Evaluator
 			referenceBoard = new Board(rootBoard.getBoard());
 			
 			//On s'assure qu'on dépasse pas le temps permis à la récursivité de la fonction.
-			if(System.currentTimeMillis()-time>1000) {
+			if(System.currentTimeMillis() - time > 1000) {
 				
 			  return;
 			
 			}
-		}
-		
-		//Pour chacun des enfants de la racine, on lance leur processus de création des enfants. Ainsi l'arbre sera rempli avec les references.
-		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet()) {			
-			
-			//Pour chaque étage de l'arbre on doit changer la couleur des nodes crées. Les coups de notre couleur sont des choix MAX, les coups de l'adversaire sont des choix MIN
-			int newColor = (color == GameRules.WHITE_PAWN) ? GameRules.BLACK_PAWN : GameRules.WHITE_PAWN;
-			
-			//On genere tout les coups possible de l'enfant
-			List<String> moves = gr.generateMoves(child.getValue().getBoard().getBoard(), newColor);	
-			
-			//L'enfant en question devient à son tour un parent, on cree ses enfants.
-			createParentsChildren(moves, child.getValue(), color, time);
 		}
 	}
 	
