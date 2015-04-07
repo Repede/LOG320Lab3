@@ -277,4 +277,32 @@ public class EvaluatorTest extends TestCase
 		};
 		assertEquals(0, evaluator.validateQuad1(board, 0, 0, 1));
 	}
+	public void testWinningBoard(){
+		int[][] board = {
+				{0,0,0,0,0,0,0,0},
+				{0,2,2,0,0,0,0,0},
+				{0,0,0,2,0,0,0,0},
+				{0,0,0,0,2,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{4,0,0,0,0,0,0,0}
+		};
+		
+		assertEquals(true, Evaluator.isWinningBoard(board,2));		
+	}
+	public void testWinningBoardFail(){
+		int[][] board = {
+				{0,0,0,0,0,0,0,0},
+				{0,2,2,0,0,0,0,0},
+				{0,0,0,2,0,0,0,0},
+				{0,0,0,0,2,0,0,0},
+				{0,0,0,0,0,2,0,0},
+				{0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
+				{4,0,0,0,0,0,0,0}
+		};
+		
+		assertEquals(false, Evaluator.isWinningBoard(board,2));		
+	}
 }

@@ -107,7 +107,7 @@ public class Evaluator
 			referenceBoard = new Board(rootBoard.getBoard());
 			
 			//On s'assure qu'on d�passe pas le temps permis � la r�cursivit� de la fonction.
-			if(System.currentTimeMillis() - time > 1000) {
+			if(System.currentTimeMillis() - time > 4000) {
 				
 			  return;
 			
@@ -115,13 +115,106 @@ public class Evaluator
 		}
 	}
 	
-
+	public static boolean isWinningBoard(int board[][], int color) {
+		int xPiece = 0;
+		int yPiece = 0;
+		
+		//On cherche la premiere position ou l'on retrouve une de nos pieces
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board.length; j++) {
+				if(board[i][j] == color) {
+					xPiece = i;
+					yPiece = j;
+					if(!hasPawnsInQuad(board, xPiece, yPiece)) {
+						return false;
+					}
+				}
+				
+			}
+		}
+		
+		return true;
+	}
+	
+	public static boolean hasPawnsInQuad(int board[][], int xOfPawn, int yOfPawn) {
+		int currentPawn = board[xOfPawn][yOfPawn];
+		
+		//Pour regarder en diagonale inverse arriere (on monte) \
+		if((xOfPawn - 1 >= 0) && (yOfPawn - 1 >= 0)) {
+			if(currentPawn == board[xOfPawn - 1][yOfPawn - 1]) {
+				return true;
+			}
+		}
+		
+		//Pour regarder en diagonale inverse avant (on descend) \
+		if((xOfPawn + 1 <= 7) && (yOfPawn + 1 <= 7)) {
+			if(currentPawn == board[xOfPawn + 1][yOfPawn + 1]) {
+				return true;
+			}
+		}
+		
+		//Pour regarder en diagonale avant (on monte) /
+		if((xOfPawn - 1 >= 0) && (yOfPawn + 1 <= 7)) {
+			if(currentPawn == board[xOfPawn - 1][yOfPawn + 1]) {
+				return true;
+			}
+		}
+		
+		//Pour regarder en diagonale arri�re (on descend) /
+		if((xOfPawn + 1 <= 7) && (yOfPawn - 1 >= 0)) {
+			if(currentPawn == board[xOfPawn + 1][yOfPawn - 1]) {
+				return true;
+			}
+		}
+		
+		//Pour regarder en bas
+		if(yOfPawn + 1 <= 7) {
+			if(currentPawn == board[xOfPawn][yOfPawn + 1]) {
+				return true;
+			}
+		}
+		
+		//Pour regarder en haut
+		if(yOfPawn - 1 >= 0) {
+			if(currentPawn == board[xOfPawn][yOfPawn - 1]) {
+				return true;
+			}
+		}
+		
+		//Pour regarder a gauche
+		if(xOfPawn - 1 >= 0) {
+			if(currentPawn == board[xOfPawn - 1][yOfPawn]) {
+				return true;
+			}
+		}
+		
+		//Pour regarder a droite
+		if(xOfPawn + 1 <= 7) {
+			if(currentPawn == board[xOfPawn + 1][yOfPawn]) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	private static float calculateBoardWeight(int board[][], int color) throws Exception
 	{
+		if(isWinningBoard(board, color)) {
+			return Float.MAX_VALUE;
+		}
+		
+		/*if(isWinningBoard(board, color)) {
+			if(color == AIMechanics.MY_COLOR) {
+				return Float.MAX_VALUE;
+			} else {
+				return Float.MIN_VALUE;
+			}
+		}*/
+		
 		// --------------- NORMAL EVALUATOR --------------- 
 		// Utilise l'approche par centre de masse, basé sur https://pure.uvt.nl/portal/files/1216600/quad_ICCA_newsletter_vol_24_no_1.pdf
-	/*	
+		
 		// First, the centre of mass of the pieces on the board is computed for each side.
 		Point centerOfMassWhite = retrieveCenterOfMass(board, 2);
 		Point centerOfMassBlack = retrieveCenterOfMass(board, 4);
@@ -130,81 +223,50 @@ public class Evaluator
 		//	- The distance is measured as the minimal number of squares the piece is removed from the centre of mass. 
 		//  - These distances are summed together, called the sum-of-distances. 
 		List<Float> distancesWithCenterWhite = retrieveSumOfDistances(board, 2, centerOfMassWhite);
-		List<Float> distancesWithCenterBlack = retrieveSumOfDistances(board, 4, centerOfMassBlack);
 		
-		// Third, the sum-of-minimaldistances is calculated. It is defined as the sum of the minimal distances of the pieces from the centre of mass.
-		//	- 	This computation is necessary since otherwise boards with a few pieces would be preferred. For instance, if we
-		//		have ten pieces, there will be always at least eight pieces at a distance of 1 from the centre of mass, and one
-		//		piece at a distance of 2. In this case the total sum of distances is minimal 10. Thus, the sum-of-minimaldistances
-		//		is subtracted from the sum-of-distances. 
-		List<Float> distancesWhite = retrieveCalculateDistance(distancesWithCenterWhite);
-		List<Float> distancesBlack = retrieveCalculateDistance(distancesWithCenterBlack);
-		
-		// Fourth, the average distance towards the centre of mass is calculated 
-		Float averageDistanceWhite = calculateAverageDistance(distancesWhite);
-		Float averageDistanceBlack = calculateAverageDistance(distancesBlack);
-		
-		// Fifth, the inverse of the average distance is defined as the concentration.
-		Float concentrationWhite = 1/averageDistanceWhite;
-		Float cencentrationBlack = 1/averageDistanceBlack;*/
-		
-/////////////////////////////////////////////////////////For each Color////////////////////////////////////////////////		
-		Point centerOfMassWhite = retrieveCenterOfMass(board,color);
-		//System.out.println("centerOfMassWhite[X] - "+centerOfMassWhite.getX());
-		//System.out.println("centerOfMassWhite[Y] - "+centerOfMassWhite.getY());
-		
-		//Point centerOfMassBlack = retrieveCenterOfMass(board, 4);
-		
-		// Second, we compute for each piece its distance to the centre of mass. 
-		//	- The distance is measured as the minimal number of squares the piece is removed from the centre of mass. 
-		//  - These distances are summed together, called the sum-of-distances. 
-		List<Float> distancesWithCenterWhite = retrieveSumOfDistances(board, color, centerOfMassWhite);
-		int sumofdistances = 0;
+		int sumOfDistancesWhite = 0;
 		for(float num : distancesWithCenterWhite)
 		{
-			sumofdistances+=num;
+			sumOfDistancesWhite += num;
 		}
-		//TODO:REMOVE
-		//for(float num : distancesWithCenterWhite)
-		//{
-			//System.out.println("distCenterWhite - "+num);
-		//}
-		//System.out.println("LIST LENGTH: - "+distancesWithCenterWhite.size());
-		//List<Float> distancesWithCenterBlack = retrieveSumOfDistances(board, 4, centerOfMassBlack);
+		
+		List<Float> distancesWithCenterBlack = retrieveSumOfDistances(board, 4, centerOfMassBlack);
+		
+		int sumOfDistancesBlack = 0;
+		for(float num : distancesWithCenterBlack)
+		{
+			sumOfDistancesBlack += num;
+		}
 		
 		// Third, the sum-of-minimaldistances is calculated. It is defined as the sum of the minimal distances of the pieces from the centre of mass.
 		//	- 	This computation is necessary since otherwise boards with a few pieces would be preferred. For instance, if we
 		//		have ten pieces, there will be always at least eight pieces at a distance of 1 from the centre of mass, and one
 		//		piece at a distance of 2. In this case the total sum of distances is minimal 10. Thus, the sum-of-minimaldistances
 		//		is subtracted from the sum-of-distances. 
-		float sumofminimaldistances = retrieveSumOfMinimalDistance(board,color);
-		float heuristic = sumofdistances-sumofminimaldistances;
-		//System.out.println("HEUR : "+heuristic);
-		//TODO:REMOVE
-		//System.out.println("Test min dist: - "+sumofminimaldistances);
+		float sumOfMinimalDistancesWhite = retrieveSumOfMinimalDistance(board, 2);
+		float sumOfMinimalDistancesBlack = retrieveSumOfMinimalDistance(board, 4);
 		
-	//	List<Float> distancesBlack = retrieveCalculateDistance(distancesWithCenterBlack);
+		float subDistancesWhite = sumOfDistancesWhite - sumOfMinimalDistancesWhite;
+		float subDistancesBlack = sumOfDistancesBlack - sumOfMinimalDistancesBlack;
 		
 		// Fourth, the average distance towards the centre of mass is calculated 
 		Float averageDistanceWhite = calculateAverageDistance(distancesWithCenterWhite);
-		//Float averageDistanceBlack = calculateAverageDistance(distancesBlack);
+		Float averageDistanceBlack = calculateAverageDistance(distancesWithCenterBlack);
 		
 		// Fifth, the inverse of the average distance is defined as the concentration.
 		Float concentrationWhite = 1/averageDistanceWhite;
-	//	Float cencentrationBlack = 1/averageDistanceBlack;
-		
-		//TODO:REMOVE
-		//System.out.println("averageDistanceWhite - "+averageDistanceWhite);
-		//System.out.println("concentrationWhite - "+concentrationWhite);
+		Float concentrationBlack = 1/averageDistanceBlack;
 		
 		// --------------- QUAD EVALUATOR --------------- 
 		Float quadEvaluatorValue = retrieveBoardEulerQuad(board, color);
 		
+		//System.out.println(((subDistancesWhite * concentrationWhite) - (subDistancesBlack * concentrationBlack)) * quadEvaluatorValue);
 		
-		// #TODO: Est-ce que l'on privilégie les boards dont les pieces sont plus proche du centre de masse avec un nombre de quad élevés?
-		//System.out.println("FINAL : "+(heuristic+concentrationWhite) * quadEvaluatorValue);
-		return (heuristic+concentrationWhite) * quadEvaluatorValue;
-		
+		if (color == 2) {
+			return ((subDistancesWhite * concentrationWhite) - (subDistancesBlack * concentrationBlack)) * quadEvaluatorValue;
+		} else {
+			return ((subDistancesBlack * concentrationBlack) - (subDistancesWhite * concentrationWhite)) * quadEvaluatorValue;
+		}
 	}
 	
 	
@@ -304,9 +366,9 @@ public class Evaluator
 			}
 		}
 		
-		if(pieceNumber == 0){
+		/*if(pieceNumber == 0){
 			throw new Exception("Il n'y a plus de pion !!");
-		}
+		}*/
 		center.x = (int)(centroidJ / pieceNumber);
 		center.y = (int)(centroidI / pieceNumber);
 		return center;

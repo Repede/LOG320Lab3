@@ -2,11 +2,14 @@ package Game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class AIMechanics
 {
+	public static int MY_COLOR;
 	//On cherche le meilleur coup possible a jouer considerant le board actuel et quel couleur on joue
 	public String getBestMove(Board currentBoard, int myColor)
 	{
@@ -27,7 +30,7 @@ public class AIMechanics
 		GameRules gr = new GameRules();
 		//On genere les meilleur coups possible a jouer
 		List<String> moves = gr.generateMoves(copyOfCurrentBoard.getBoard(), myColor);
-		
+		AIMechanics.MY_COLOR=myColor;
 		//On cree les enfants de la racine
 		Evaluator.createParentsChildren(moves, rootBoard, myColor, initTime);
 		
@@ -65,14 +68,46 @@ public class AIMechanics
 		}
 		
 		//Pour chaque enfant de la racine, on lance l'alpha beta qui trouvera le meilleur coup a jouer
+		Map<MinMaxNode, Integer> entriesAlphaBeta = new HashMap<MinMaxNode, Integer>();
+		List<Float> listeValeursAlphaBeta = new ArrayList<Float>();
 		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet()) {
-			float tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, true);
 			
-			if(tempAlphaBeta > maxAlphaBeta) {
+			MinMaxNode tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, true);
+			
+			listeValeursAlphaBeta.add(tempAlphaBeta.getValue());
+			entriesAlphaBeta.put(tempAlphaBeta, child.getKey());
+			
+			/*if(tempAlphaBeta > maxAlphaBeta) {
 				bestMove = child.getValue();
+			}*/
+		}
+		Float maxValeurAlphaBeta = Collections.max(listeValeursAlphaBeta);
+		
+		//int nodeID = entriesAlphaBeta.get(maxValeurAlphaBeta);
+		
+		int nodeID = 0;
+		MinMaxNode parent = new MinMaxNode();
+		for(Entry<MinMaxNode, Integer> entry : entriesAlphaBeta.entrySet()) {
+			if(entry.getKey().getValue() == maxValeurAlphaBeta) {
+				bestMove = entry.getKey();
+				break;
 			}
 		}
+		
+		parent = bestMove.getParent();
+		while(parent.getParent() != null)
+		{
+			bestMove = parent;
+			parent = bestMove.getParent();
+		}
+		
+		//bestMove = rootBoard.getChildren().get(nodeID);
+		
+		for(Entry<MinMaxNode, Integer> entry : entriesAlphaBeta.entrySet()) {
+			System.out.println(entry.getKey().getValue() + " - " + entry.getValue());
+		}
 
+		System.out.println(bestMove.getValue() + " - " + nodeID);
 		//On retourne l'information du node ayant le meilleur coup a jouer
 		return bestMove.getMove();
 	}

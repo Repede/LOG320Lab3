@@ -7,31 +7,45 @@ import java.util.Map.Entry;
 public class AlphaBeta
 {
 
-	public float alphabeta(MinMaxNode node,float alpha,float beta,boolean Player)
+	public MinMaxNode alphabeta(MinMaxNode node, float alpha, float beta, boolean Player)
 	{
 		if(node.getChildren().isEmpty())
 		{
-		    return node.getValue();
+		    return node;
 		}
 	    if (Player)
 	    {
+	    	MinMaxNode alphaNode = new MinMaxNode();
 	    	for(Entry<Integer,MinMaxNode> child : node.getChildren().entrySet())
 	        {
-	        	alpha = Math.max(alpha, alphabeta(child.getValue(), alpha, beta, !Player ));     
-	            if (beta <=alpha)
+	    		alphaNode = child.getValue();
+	    		MinMaxNode otherNode = alphabeta(alphaNode, alpha, beta, !Player );
+	    		if(alphaNode.getValue() < otherNode.getValue())
+	    		{
+	    			alphaNode = otherNode;
+	    			alpha = alphaNode.getValue();
+	    		}
+	            if (beta <= alpha)
 	                break;                           //  (* Beta cut-off *)
 	        }	        	
-	        return alpha;
+	        return alphaNode;
 	    }
 	    else
 	    {
+	    	MinMaxNode betaNode = new MinMaxNode();
 	        for (Entry<Integer,MinMaxNode> child: node.getChildren().entrySet())
 	        {
-	        	beta = Math.min(beta, alphabeta(child.getValue(), alpha, beta, !Player));     
+	        	betaNode = child.getValue();
+	        	MinMaxNode otherNode = alphabeta(betaNode, alpha, beta, !Player);
+	        	if(betaNode.getValue() > otherNode.getValue())
+	        	{
+	        		betaNode = otherNode;
+	        		beta = betaNode.getValue();
+	        	}
 	            if (beta <= alpha)
 	                break;                             
 	        }
-	        return beta;	
+	        return betaNode;	
 	    }
 		
 	}         
