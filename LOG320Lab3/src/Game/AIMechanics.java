@@ -18,7 +18,7 @@ public class AIMechanics
 		long initTime = System.currentTimeMillis();
 		
 		//Notre meilleur coup possible est un node parmi l'arbre
-		MinMaxNode bestMove = null;
+		//MinMaxNode bestMove = null;
 		
 		float maxAlphaBeta =- 100F;
 		AlphaBeta ab = new AlphaBeta();
@@ -70,36 +70,44 @@ public class AIMechanics
 		
 		//Pour chaque enfant de la racine, on lance l'alpha beta qui trouvera le meilleur coup a jouer
 		Map<MinMaxNode, Integer> entriesAlphaBeta = new HashMap<MinMaxNode, Integer>();
-		List<Float> listeValeursAlphaBeta = new ArrayList<Float>();
+		//List<Float> listeValeursAlphaBeta = new ArrayList<Float>();
 		for(Entry<Integer,MinMaxNode> child : rootBoard.getChildren().entrySet()) {
 			
 			MinMaxNode tempAlphaBeta = ab.alphabeta(child.getValue(), -100, 100, true);
 			
-			listeValeursAlphaBeta.add(tempAlphaBeta.getValue());
+			//listeValeursAlphaBeta.add(tempAlphaBeta.getValue());
 			entriesAlphaBeta.put(tempAlphaBeta, child.getKey());
 			
 			/*if(tempAlphaBeta > maxAlphaBeta) {
 				bestMove = child.getValue();
 			}*/
 		}
-		Float maxValeurAlphaBeta = Collections.max(listeValeursAlphaBeta);
+		MinMaxNode bestChild = new MinMaxNode();
+		bestChild.setValue(Float.NEGATIVE_INFINITY);
+		for(MinMaxNode node : entriesAlphaBeta.keySet())
+		{
+			if(node.getValue() > bestChild.getValue())
+			{
+				bestChild = node;
+			}
+		}
 		
 		//int nodeID = entriesAlphaBeta.get(maxValeurAlphaBeta);
 		
-		int nodeID = 0;
-		MinMaxNode parent = new MinMaxNode();
+		/*int nodeID = 0;
+		
 		for(Entry<MinMaxNode, Integer> entry : entriesAlphaBeta.entrySet()) {
 			if(entry.getKey().getValue() == maxValeurAlphaBeta) {
 				bestMove = entry.getKey();
 				break;
 			}
-		}
-		
-		parent = bestMove.getParent();
+		}*/
+		MinMaxNode parent = new MinMaxNode();
+		parent = bestChild.getParent();
 		while(parent.getParent() != null)
 		{
-			bestMove = parent;
-			parent = bestMove.getParent();
+			bestChild = parent;
+			parent = bestChild.getParent();
 		}
 		
 		//bestMove = rootBoard.getChildren().get(nodeID);
@@ -108,8 +116,8 @@ public class AIMechanics
 			System.out.println(entry.getKey().getValue());
 		}*/
 
-		System.out.println("BEST: "+bestMove.getValue());
+		System.out.println("BEST: "+bestChild.getValue());
 		//On retourne l'information du node ayant le meilleur coup a jouer
-		return bestMove.getMove();
+		return bestChild.getMove();
 	}
 }
