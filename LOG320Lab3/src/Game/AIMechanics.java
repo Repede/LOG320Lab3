@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 public class AIMechanics
 {
+	public static int TIME = 3000;
 	public static int MY_COLOR;
 	//On cherche le meilleur coup possible a jouer considerant le board actuel et quel couleur on joue
 	public String getBestMove(Board currentBoard, int myColor)
@@ -41,7 +42,7 @@ public class AIMechanics
 		MinMaxNode premierNode = rootBoard.getChildren().get(0);
 		
 		//Tant que le temps nous le permet, on parcoure en largeur les enfants de la profondeur actuelle et on leur cree des enfants a leur tour
-		while (System.currentTimeMillis() - initTime < 4000) {
+		while (System.currentTimeMillis() - initTime < TIME) {
 			MinMaxNode currentNode = premierNode;
 			boolean finDeLaProfondeur = false;
 			
@@ -59,7 +60,7 @@ public class AIMechanics
 					currentNode = currentNode.getNextNode();
 				}
 				
-				if(System.currentTimeMillis()-initTime > 4000) {
+				if(System.currentTimeMillis()-initTime > TIME) {
 					break;
 				}
 			}
@@ -103,11 +104,11 @@ public class AIMechanics
 		
 		//bestMove = rootBoard.getChildren().get(nodeID);
 		
-		for(Entry<MinMaxNode, Integer> entry : entriesAlphaBeta.entrySet()) {
-			System.out.println(entry.getKey().getValue() + " - " + entry.getValue());
-		}
+		/*for(Entry<MinMaxNode, Integer> entry : entriesAlphaBeta.entrySet()) {
+			System.out.println(entry.getKey().getValue());
+		}*/
 
-		System.out.println(bestMove.getValue() + " - " + nodeID);
+		System.out.println("BEST: "+bestMove.getValue());
 		//On retourne l'information du node ayant le meilleur coup a jouer
 		return bestMove.getMove();
 	}

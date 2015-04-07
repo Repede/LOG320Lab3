@@ -16,7 +16,7 @@ public class Evaluator
 	 *  https://i.imgflip.com/iwhub.jpg
 	 */
 	//TODO: DELETE THIS
-	public static Map<Integer,MinMaxNode> evaluateBestMoves(List<String> validPositions, Board rootBoard, int color)
+	/*public static Map<Integer,MinMaxNode> evaluateBestMoves(List<String> validPositions, Board rootBoard, int color)
 	{
 		Map<Integer,MinMaxNode> minMaxDictionary = new HashMap<Integer,MinMaxNode>();
 		//On garde une copie du rootBoard pour pouvoir ï¿½valuer plusieurs moves du root
@@ -52,7 +52,7 @@ public class Evaluator
 		}
 		
 		return minMaxDictionary;
-	}
+	}*/
 
 	/**
 	 * Evalue les moves possible et les assignes directement au Node parent envoye
@@ -107,7 +107,7 @@ public class Evaluator
 			referenceBoard = new Board(rootBoard.getBoard());
 			
 			//On s'assure qu'on dï¿½passe pas le temps permis ï¿½ la rï¿½cursivitï¿½ de la fonction.
-			if(System.currentTimeMillis() - time > 4000) {
+			if(System.currentTimeMillis() - time > 3500) {
 				
 			  return;
 			
@@ -160,7 +160,7 @@ public class Evaluator
 			}
 		}
 		
-		//Pour regarder en diagonale arrière (on descend) /
+		//Pour regarder en diagonale arriï¿½re (on descend) /
 		if((xOfPawn + 1 <= 7) && (yOfPawn - 1 >= 0)) {
 			if(currentPawn == board[xOfPawn + 1][yOfPawn - 1]) {
 				return true;
@@ -200,9 +200,10 @@ public class Evaluator
 	
 	private static float calculateBoardWeight(int board[][], int color) throws Exception
 	{
-		if(isWinningBoard(board, color)) {
+
+		/*if(isWinningBoard(board, color)) {
 			return Float.MAX_VALUE;
-		}
+		}*/
 		
 		/*if(isWinningBoard(board, color)) {
 			if(color == AIMechanics.MY_COLOR) {
@@ -257,15 +258,21 @@ public class Evaluator
 		Float concentrationWhite = 1/averageDistanceWhite;
 		Float concentrationBlack = 1/averageDistanceBlack;
 		
-		// --------------- QUAD EVALUATOR --------------- 
-		Float quadEvaluatorValue = retrieveBoardEulerQuad(board, color);
 		
-		//System.out.println(((subDistancesWhite * concentrationWhite) - (subDistancesBlack * concentrationBlack)) * quadEvaluatorValue);
+		// --------------- QUAD EVALUATOR --------------- 
+		//Float quadEvaluatorValue = retrieveBoardEulerQuad(board, color);
+		
+		
+		
+		//System.out.println("quad: "+quadEvaluatorValue);
 		
 		if (color == 2) {
-			return ((subDistancesWhite * concentrationWhite) - (subDistancesBlack * concentrationBlack)) * quadEvaluatorValue;
+			//System.out.println(((subDistancesWhite * concentrationWhite) - (subDistancesBlack * concentrationBlack)));
+			return (concentrationWhite*subDistancesWhite - concentrationBlack*subDistancesBlack);
+			
 		} else {
-			return ((subDistancesBlack * concentrationBlack) - (subDistancesWhite * concentrationWhite)) * quadEvaluatorValue;
+			//System.out.println(((subDistancesBlack * concentrationBlack) - (subDistancesWhite * concentrationWhite)));
+			return (concentrationBlack*subDistancesBlack - concentrationWhite*subDistancesWhite);
 		}
 	}
 	

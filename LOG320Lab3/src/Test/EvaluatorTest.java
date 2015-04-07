@@ -292,15 +292,26 @@ public class EvaluatorTest extends TestCase
 		assertEquals(true, Evaluator.isWinningBoard(board,2));		
 	}
 	public void testWinningBoardFail(){
-		int[][] board = {
+		/*int[][] board = {
 				{0,0,0,0,0,0,0,0},
 				{0,2,2,0,0,0,0,0},
-				{0,0,0,2,0,0,0,0},
+				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,2,0,0,0},
 				{0,0,0,0,0,2,0,0},
 				{0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0},
 				{4,0,0,0,0,0,0,0}
+		};*/
+		
+		int[][] board = {
+				{0,0,0,0,0,0,0,0},
+				{2,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,2},
+				{2,0,0,4,0,0,0,2},
+				{2,0,0,0,0,0,0,2},
+				{0,0,0,0,0,0,0,0}
 		};
 		
 		assertEquals(false, Evaluator.isWinningBoard(board,2));		

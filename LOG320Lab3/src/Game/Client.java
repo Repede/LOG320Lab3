@@ -52,7 +52,7 @@ class Client
 						}
 					}
 
-					gameBoard.displayBoard();
+					//gameBoard.displayBoard();
 					//previousValidBoard = gameBoard;
 					
 					//Mettre le break point ici (sur le sysout) pour �tre capable de d�bugger comme il le faut. Faire "step-over" sur le getBestMove
@@ -70,7 +70,7 @@ class Client
 					
 					gameBoard.updateBoardWithLetters(gameBoard,outputToServer);
 					System.out.print("\n");
-					gameBoard.displayBoard();
+					//gameBoard.displayBoard();
 					output.write(outputToServer.getBytes(), 0, outputToServer.length());
 					output.flush();
 				}
@@ -114,7 +114,7 @@ class Client
 					
 					gameBoard.updateBoardWithLetters(gameBoard, s);
 					System.out.print("\n");
-					gameBoard.displayBoard();
+					//gameBoard.displayBoard();
 					//previousValidBoard = gameBoard;
 					System.out.print("Dernier coup : " + s);
 					System.out.print("\nEntrez votre coup : ");
@@ -123,7 +123,7 @@ class Client
 					String outputToServer = gameBoard.boardIndexToLetter(move);	
 					gameBoard.updateBoardWithLetters(gameBoard, outputToServer);
 					System.out.print("\n");
-					gameBoard.displayBoard();
+					//gameBoard.displayBoard();
 					output.write(outputToServer.getBytes(), 0, outputToServer.length());
 					output.flush();
 				}
@@ -146,7 +146,7 @@ class Client
 					String outputToServer = gameBoard.boardIndexToLetter(move);	
 					gameBoard.updateBoardWithLetters(gameBoard, outputToServer);
 					System.out.print("\n");
-					gameBoard.displayBoard();
+					//gameBoard.displayBoard();
 					output.write(outputToServer.getBytes(), 0, outputToServer.length());
 					output.flush();
 
