@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 public class AIMechanics
 {
-	public static int TIME = 3000;
+	public static int TIME = 3200;
 	public static int MY_COLOR;
 	//On cherche le meilleur coup possible a jouer considerant le board actuel et quel couleur on joue
 	public String getBestMove(Board currentBoard, int myColor)
