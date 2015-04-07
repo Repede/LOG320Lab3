@@ -15,6 +15,7 @@ public class Evaluator
 	/**
 	 *  https://i.imgflip.com/iwhub.jpg
 	 */
+	//TODO: DELETE THIS
 	public static Map<Integer,MinMaxNode> evaluateBestMoves(List<String> validPositions, Board rootBoard, int color)
 	{
 		Map<Integer,MinMaxNode> minMaxDictionary = new HashMap<Integer,MinMaxNode>();
@@ -28,10 +29,16 @@ public class Evaluator
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
 			//On ajoute le board, le move et le poid du board dans la racine
 			node.setBoard(new Board(referenceBoard));
-			node.setMove(validPositions.get(i));	
+			node.setMove(validPositions.get(i));
+			System.out.println("BEFORETRY");
 			try
 			{
-				node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
+				//ROREPLACE
+				float testWeight = calculateBoardWeight(referenceBoard.getBoard(), color);
+				node.setValue(testWeight);
+				System.out.println(testWeight);
+				//REPLACEWITH v
+				//node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
 			} catch (Exception e)
 			{
 				// TODO Auto-generated catch block
@@ -56,7 +63,7 @@ public class Evaluator
 	public static void createParentsChildren(List<String> validPositions, MinMaxNode rootBoard, int color, long time)
 	{
 		GameRules gr = new GameRules();
-		//On garde une copie du rootBoard pour pouvoir evaluer tous les coups possibles ‡ partir de la racine.
+		//On garde une copie du rootBoard pour pouvoir evaluer tous les coups possibles ÔøΩ partir de la racine.
 		Board referenceBoard = new Board(rootBoard.getBoard());
 		
 		//Pour chacun des coups valide, on cree un node enfant avec les informations contenant ce coup joue, puis assigne le rootBoard comme parent.
@@ -74,13 +81,17 @@ public class Evaluator
 				node.setPreviousNode(rootBoard.getPreviousNode().getChildren().get(dernierNodeDuPreviousNode));
 			}
 			
-			//On joue le coup sur le board de rÈfÈrence pour que le node conserve un board ayant le coup joue.
+			//On joue le coup sur le board de rÔøΩfÔøΩrence pour que le node conserve un board ayant le coup joue.
 			referenceBoard.updateBoard(referenceBoard, validPositions.get(i));
 			
 			//On enregistre l'etat du board, le coup valide ainsi que le poid du board dans le node.
 			node.setBoard(new Board(referenceBoard));
 			node.setMove(validPositions.get(i));
-			try {
+			try
+			{
+				//float test = calculateBoardWeight(referenceBoard.getBoard(), color);
+				//node.setValue(test);
+				//System.out.println(test);
 				node.setValue(calculateBoardWeight(referenceBoard.getBoard(), color));
 			} catch (Exception e){
 				e.printStackTrace();
@@ -92,10 +103,10 @@ public class Evaluator
 			//On ajoute le node du coup valide en tant qu'enfant du rootBoard
 			rootBoard.getChildren().put(i, node);
 			
-			//On remet le board de reference tel qu'il etait au dÈpart.
+			//On remet le board de reference tel qu'il etait au dÔøΩpart.
 			referenceBoard = new Board(rootBoard.getBoard());
 			
-			//On s'assure qu'on dÈpasse pas le temps permis ‡ la rÈcursivitÈ de la fonction.
+			//On s'assure qu'on dÔøΩpasse pas le temps permis ÔøΩ la rÔøΩcursivitÔøΩ de la fonction.
 			if(System.currentTimeMillis() - time > 1000) {
 				
 			  return;
@@ -139,12 +150,26 @@ public class Evaluator
 		
 /////////////////////////////////////////////////////////For each Color////////////////////////////////////////////////		
 		Point centerOfMassWhite = retrieveCenterOfMass(board,color);
+		//System.out.println("centerOfMassWhite[X] - "+centerOfMassWhite.getX());
+		//System.out.println("centerOfMassWhite[Y] - "+centerOfMassWhite.getY());
+		
 		//Point centerOfMassBlack = retrieveCenterOfMass(board, 4);
 		
 		// Second, we compute for each piece its distance to the centre of mass. 
 		//	- The distance is measured as the minimal number of squares the piece is removed from the centre of mass. 
 		//  - These distances are summed together, called the sum-of-distances. 
 		List<Float> distancesWithCenterWhite = retrieveSumOfDistances(board, color, centerOfMassWhite);
+		int sumofdistances = 0;
+		for(float num : distancesWithCenterWhite)
+		{
+			sumofdistances+=num;
+		}
+		//TODO:REMOVE
+		//for(float num : distancesWithCenterWhite)
+		//{
+			//System.out.println("distCenterWhite - "+num);
+		//}
+		//System.out.println("LIST LENGTH: - "+distancesWithCenterWhite.size());
 		//List<Float> distancesWithCenterBlack = retrieveSumOfDistances(board, 4, centerOfMassBlack);
 		
 		// Third, the sum-of-minimaldistances is calculated. It is defined as the sum of the minimal distances of the pieces from the centre of mass.
@@ -152,25 +177,34 @@ public class Evaluator
 		//		have ten pieces, there will be always at least eight pieces at a distance of 1 from the centre of mass, and one
 		//		piece at a distance of 2. In this case the total sum of distances is minimal 10. Thus, the sum-of-minimaldistances
 		//		is subtracted from the sum-of-distances. 
-		List<Float> distancesWhite = retrieveCalculateDistance(distancesWithCenterWhite);
+		float sumofminimaldistances = retrieveSumOfMinimalDistance(board,color);
+		float heuristic = sumofdistances-sumofminimaldistances;
+		//System.out.println("HEUR : "+heuristic);
+		//TODO:REMOVE
+		//System.out.println("Test min dist: - "+sumofminimaldistances);
+		
 	//	List<Float> distancesBlack = retrieveCalculateDistance(distancesWithCenterBlack);
 		
 		// Fourth, the average distance towards the centre of mass is calculated 
-		Float averageDistanceWhite = calculateAverageDistance(distancesWhite);
+		Float averageDistanceWhite = calculateAverageDistance(distancesWithCenterWhite);
 		//Float averageDistanceBlack = calculateAverageDistance(distancesBlack);
 		
 		// Fifth, the inverse of the average distance is defined as the concentration.
 		Float concentrationWhite = 1/averageDistanceWhite;
 	//	Float cencentrationBlack = 1/averageDistanceBlack;
 		
+		//TODO:REMOVE
+		//System.out.println("averageDistanceWhite - "+averageDistanceWhite);
+		//System.out.println("concentrationWhite - "+concentrationWhite);
 		
 		// --------------- QUAD EVALUATOR --------------- 
 		Float quadEvaluatorValue = retrieveBoardEulerQuad(board, color);
 		
 		
 		// #TODO: Est-ce que l'on privil√©gie les boards dont les pieces sont plus proche du centre de masse avec un nombre de quad √©lev√©s?
+		//System.out.println("FINAL : "+(heuristic+concentrationWhite) * quadEvaluatorValue);
+		return (heuristic+concentrationWhite) * quadEvaluatorValue;
 		
-		return concentrationWhite + quadEvaluatorValue;
 	}
 	
 	
@@ -185,8 +219,30 @@ public class Evaluator
 		return averageDistance;
 	}
 
-	private static List<Float> retrieveCalculateDistance(List<Float> distancesWithCenter)
+	private static int retrieveSumOfMinimalDistance(int[][] board, int color)
 	{
+		int sumOfMinimalDistances = 0;
+		int nbPawns = 0;
+		for(int i = 0 ; i < board.length ; ++i)
+		{
+			for(int j = 0 ; j < board.length ; ++j)
+			{
+				if(board[i][j] == color)
+				{
+					nbPawns++;
+				}
+			}
+		}
+		nbPawns--;
+		if(nbPawns < 9)
+		{
+			sumOfMinimalDistances = nbPawns;
+		}
+		else
+		{
+			sumOfMinimalDistances = 8 + ((nbPawns%8)*2);
+		}
+		/*SHIT
 		// Found the minimal value
 		Float minimalValue = Float.MAX_VALUE;
 		for(Float point : distancesWithCenter){
@@ -194,6 +250,7 @@ public class Evaluator
 				minimalValue = point;
 			}				
 		}
+		System.out.println("Min value - "+minimalValue);
 		
 		// Remove all the value not equal to the minimal value	
 		Iterator<Float> i = distancesWithCenter.iterator();
@@ -202,18 +259,20 @@ public class Evaluator
 			Float s = i.next();
 			if(s != minimalValue){
 				i.remove();
+				System.out.println("Min value - REMOVE: "+s);
 			}
 		}
-		return distancesWithCenter;
+		return distancesWithCenter;*/
+		return sumOfMinimalDistances;
 	}
 
 	private static List<Float> retrieveSumOfDistances(int[][] board, int color, Point center)
 	{
 		List<Float> distancesWithCenter = new ArrayList<Float>();
 		
-		for(int i = 0 ; i < 7 ; i++)
+		for(int i = 0 ; i < board.length ; i++)
 		{
-			for(int j = 0 ; j < 7 ; j++)
+			for(int j = 0 ; j < board.length ; j++)
 			{
 				if(board[i][j] == color){
 					float distance = (float) Math.abs(center.x - j) + Math.abs(center.y - i) ;
@@ -229,30 +288,27 @@ public class Evaluator
 		// Bas√© sur http://stackoverflow.com/questions/18591964/how-to-calculate-centroid-of-an-arraylist-of-points
 
 		Point center = new Point();
-		int pieceNumber = 0;
-		int centroidI = 0;
-		int centroidJ = 0;
+		float pieceNumber = 0F;
+		float centroidI = 0F;
+		float centroidJ = 0F;
 		for (int i = 0; i < board.length; i++)
-			for (int j = 0; j < board.length; j++)
-				if(board[i][j]==color)
-					pieceNumber++;
-		
-		for(int i = 0 ; i < 7 ; i++)
 		{
-			for(int j = 0 ; j < 7 ; j++)
+			for (int j = 0; j < board.length; j++)
 			{
-				if(board[i][j] == color){
+				if(board[i][j]==color)
+				{
+					pieceNumber++;
 					centroidI += i;
 					centroidJ += j;
 				}
-			}			
+			}
 		}
 		
 		if(pieceNumber == 0){
 			throw new Exception("Il n'y a plus de pion !!");
 		}
-		center.x = centroidJ / pieceNumber;
-		center.y = centroidI / pieceNumber;
+		center.x = (int)(centroidJ / pieceNumber);
+		center.y = (int)(centroidI / pieceNumber);
 		return center;
 	}
 
