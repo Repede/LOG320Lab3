@@ -247,16 +247,18 @@ public class Evaluator
 		float sumOfMinimalDistancesWhite = retrieveSumOfMinimalDistance(board, 2);
 		float sumOfMinimalDistancesBlack = retrieveSumOfMinimalDistance(board, 4);
 		
-		float subDistancesWhite = sumOfDistancesWhite - sumOfMinimalDistancesWhite;
-		float subDistancesBlack = sumOfDistancesBlack - sumOfMinimalDistancesBlack;
+		float subDistancesWhite = sumOfDistancesWhite + sumOfMinimalDistancesWhite;
+		float subDistancesBlack = sumOfDistancesBlack + sumOfMinimalDistancesBlack;
+		
+		//System.out.println(sumOfMinimalDistancesWhite);
 		
 		// Fourth, the average distance towards the centre of mass is calculated 
-		Float averageDistanceWhite = calculateAverageDistance(distancesWithCenterWhite);
-		Float averageDistanceBlack = calculateAverageDistance(distancesWithCenterBlack);
+		//Float averageDistanceWhite = calculateAverageDistance(distancesWithCenterWhite);
+		//Float averageDistanceBlack = calculateAverageDistance(distancesWithCenterBlack);
 		
 		// Fifth, the inverse of the average distance is defined as the concentration.
-		Float concentrationWhite = 1/averageDistanceWhite;
-		Float concentrationBlack = 1/averageDistanceBlack;
+		//Float concentrationWhite = 1/averageDistanceWhite;
+		//Float concentrationBlack = 1/averageDistanceBlack;
 		
 		
 		// --------------- QUAD EVALUATOR --------------- 
@@ -267,12 +269,13 @@ public class Evaluator
 		//System.out.println("quad: "+quadEvaluatorValue);
 		
 		if (color == 2) {
-			//System.out.println(((subDistancesWhite * concentrationWhite) - (subDistancesBlack * concentrationBlack)));
-			return (concentrationWhite*subDistancesWhite - concentrationBlack*subDistancesBlack);
+			//System.out.println(subDistancesWhite-subDistancesBlack);
+			return (subDistancesWhite-subDistancesBlack);
 			
 		} else {
 			//System.out.println(((subDistancesBlack * concentrationBlack) - (subDistancesWhite * concentrationWhite)));
-			return (concentrationBlack*subDistancesBlack - concentrationWhite*subDistancesWhite);
+			
+			return (subDistancesBlack - subDistancesWhite);
 		}
 	}
 	
@@ -345,6 +348,10 @@ public class Evaluator
 			{
 				if(board[i][j] == color){
 					float distance = (float) Math.abs(center.x - j) + Math.abs(center.y - i) ;
+					if(distance < 0)
+					{
+						distance*=-1;
+					}
 					distancesWithCenter.add(distance);
 				}
 			}
